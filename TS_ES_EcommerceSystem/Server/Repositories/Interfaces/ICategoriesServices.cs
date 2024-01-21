@@ -4,11 +4,11 @@ namespace Server.Repositories.Interfaces
 {
     public interface ICategoriesServices
     {
-        List<Categories> GetCategorys();
-        Categories GetCategory(int id);
-        void DeleteCategory(int id);
-        void UpdateCategory(int id, Categories category);
-        void AddCategory(Categories category);
+        public Task<List<Categories>> GetCategories();
+        public Task<Categories> GetCategory(int id);
+        public Task DeleteCategory(int id);
+        public Task UpdateCategory(int id, Categories category);
+        public Task<int> AddCategory(Categories category);
 
     }
 }
