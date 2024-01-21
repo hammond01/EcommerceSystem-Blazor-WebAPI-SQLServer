@@ -1,4 +1,10 @@
-Select c.CategoryID, c.CategoryName, c.Description, c.Picture from Categories c
-Select c.CategoryID, c.CategoryName, c.Description, c.Picture from Categories c where c.CategoryID = 1
+SELECT CategoryID, CategoryName, Description, Picture FROM Categories;
 
-Insert into Categories(CategoryName,Description,Picture ) values ('Category add 1', 'Category description 1', 'Picture 1');
+INSERT INTO Categories (CategoryName, Description, Picture) VALUES ('NewCategory', 'New Description', 0x0102030405);
+
+SELECT CategoryID, CategoryName, Description, Picture FROM Categories Where CategoryID = 10;
+
+UPDATE Categories SET CategoryName = 'UpdatedName', Description = 'Updated Description', Picture = 0x0504030201 WHERE CategoryID = 10;
+
+DELETE FROM Categories WHERE CategoryID = 10;
+
