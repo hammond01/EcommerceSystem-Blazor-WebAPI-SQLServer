@@ -102,7 +102,6 @@ namespace ServerLibrary.Repositories.Services
             {
                 throw new Exception($"Error in delete category: {ex.Message}");
             }
-
         }
     }
 }

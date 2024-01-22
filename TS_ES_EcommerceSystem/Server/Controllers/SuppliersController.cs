@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
 
 namespace Server.Controllers
 {
-    public class CategoryController(ICategoriesServices _repo) : ConBase
+    public class SuppliersController(ISuppliersServices _repo) : ConBase
     {
         [HttpGet("Gets")]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetSuppliers()
         {
             try
             {
-                var res = await _repo.GetCategories();
+                var res = await _repo.GetSuppliers();
                 return Ok(res);
             }
             catch (Exception ex)
@@ -20,11 +21,11 @@ namespace Server.Controllers
             }
         }
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetCategory(int id)
+        public async Task<IActionResult> GetSupplier(int id)
         {
             try
             {
-                var res = await _repo.GetCategory(id);
+                var res = await _repo.GetSupplier(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -33,11 +34,11 @@ namespace Server.Controllers
             }
         }
         [HttpPost("Add")]
-        public async Task<IActionResult> AddCategory(Categories category)
+        public async Task<IActionResult> AddSupplier(Suppliers supplier)
         {
             try
             {
-                var data = await _repo.AddCategory(category);
+                var data = await _repo.AddSupplier(supplier);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -46,11 +47,11 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, Categories category)
+        public async Task<IActionResult> UpdateSupplier(int id, Suppliers supplier)
         {
             try
             {
-                var data = await _repo.UpdateCategory(id, category);
+                var data = await _repo.UpdateSupplier(id, supplier);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -60,11 +61,11 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteSupplier(int id)
         {
             try
             {
-                var data = await _repo.DeleteCategory(id);
+                var data = await _repo.DeleteSupplier(id);
                 return Ok(data);
             }
             catch (Exception ex)
