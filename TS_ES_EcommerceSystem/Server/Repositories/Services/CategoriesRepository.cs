@@ -72,10 +72,10 @@ namespace ServerLibrary.Repositories.Services
             {
                 var query = Extension.GetInsertQuery("Categories", "CategoryID", "CategoryName", "Description", "Picture");
                 var data = await Program.Sql.QuerySingleAsync<Categories>(query, category);
-                var dataAfterAdd = await GetCategory(data.CategoryID);
+                category.CategoryID = data.CategoryID;
                 return new
                 {
-                    data = dataAfterAdd,
+                    data = category,
                     status = 200,
                     msg = "Add category success!"
                 };

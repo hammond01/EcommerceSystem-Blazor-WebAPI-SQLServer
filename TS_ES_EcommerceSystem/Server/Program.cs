@@ -1,4 +1,5 @@
 using Server.Repositories.Interfaces;
+using Server.Repositories.Services;
 using ServerLibrary.Repositories.Services;
 using System.Data.SqlClient;
 
@@ -12,6 +13,7 @@ class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddScoped<ICategoriesServices, CategoriesRepository>();
+        builder.Services.AddScoped<IProductsServices, ProductsRepository>();
 
         // Add services to the container.
 
