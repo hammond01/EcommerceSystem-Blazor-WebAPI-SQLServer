@@ -6,7 +6,7 @@ namespace Server.Controllers
 {
     public class CategoryController(ICategoriesServices _repo) : ConBase
     {
-        [HttpGet("GetCategories")]
+        [HttpGet("Gets")]
         public async Task<IActionResult> GetCategories()
         {
             try
@@ -19,7 +19,7 @@ namespace Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("GetCategory/{id}")]
+        [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             try
@@ -32,27 +32,26 @@ namespace Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("AddCategory")]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddCategory(Categories category)
         {
             try
             {
-                var id = await _repo.AddCategory(category);
-                var categoryNew = await _repo.GetCategory(id);
-                return categoryNew == null ? NotFound() : Ok(categoryNew);
+                var data = await _repo.AddCategory(category);
+                return Ok(data);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("UpdateCategory/{id}")]
+        [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateCategory(int id, Categories category)
         {
             try
             {
-                await _repo.UpdateCategory(id, category);
-                return Ok("Update category successfull");
+                var data = await _repo.UpdateCategory(id, category);
+                return Ok(data);
             }
             catch (Exception ex)
             {
@@ -60,13 +59,13 @@ namespace Server.Controllers
             }
         }
 
-        [HttpDelete("DeleteCategory/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
             {
-                await _repo.DeleteCategory(id);
-                return Ok("Delete category with CategoryID: " + id + " successfull");
+                var data = await _repo.DeleteCategory(id);
+                return Ok(data);
             }
             catch (Exception ex)
             {
