@@ -6,7 +6,8 @@
         {
             string key = string.Join(", ", props);
             string value = $"@{string.Join(", @", props)}";
-            return $"INSERT INTO {table}({key}) OUTPUT INSERTED.{idColumn} VALUES({value});";
+            string query = @$"INSERT INTO {table}({key}) OUTPUT INSERTED.{idColumn} VALUES({value});";
+            return query;
         }
         public static string GetDeleteQueryInt(string table, string idColumn, int props)
         {

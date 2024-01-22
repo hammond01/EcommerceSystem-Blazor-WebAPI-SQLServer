@@ -7,81 +7,100 @@ namespace ServerLibrary.Repositories.Services
 {
     public class CategoriesRepository : ICategoriesServices
     {
-        public async Task<Categories> GetCategory(int id)
+        public async Task<object> GetCategory(int id)
         {
             try
             {
-                var query = @"SELECT CategoryID, CategoryName, Description, Picture FROM Categories WHERE CategoryID = @CategoryId;";
-                var parameters = new Categories
+                var query = @"SELECT CategoryID, CategoryName, Description, Picture FROM Categories WHERE CategoryID = @id;";
+                var res = await Program.Sql.QuerySingleAsync<Categories>(query, new { id });
+                return new
                 {
-                    CategoryID = id
+                    data = res,
+                    status = 200,
+                    msg = "Get category success!"
                 };
-                var data = await Program.Sql.QuerySingleAsync<Categories>(query, parameters);
-                return data;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error in GetCategory: {ex.Message}");
+                throw new Exception($"Error in get category: {ex.Message}");
             }
         }
 
 
-        public async Task<List<Categories>> GetCategories()
+        public async Task<object> GetCategories()
         {
             try
             {
-                var query = "SELECT CategoryID, CategoryName, Description, Picture FROM Categories";
-                var data = await Program.Sql.QueryAsync<Categories>(query);
-                return data.AsList();
+                var query = @"SELECT CategoryID, CategoryName, Description, Picture FROM Categories";
+                var res = (await Program.Sql.QueryAsync<Categories>(query)).AsList();
+                return new
+                {
+                    data = res,
+                    status = 200,
+                    msg = "Get categories success!"
+                };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error in GetCategories: {ex.Message}");
+                throw new Exception($"Error in get categories: {ex.Message}");
             }
         }
 
-        public async Task UpdateCategory(int id, Categories category)
+        public async Task<object> UpdateCategory(int id, Categories category)
         {
             try
             {
                 var query = @"UPDATE Categories SET CategoryName = @CategoryName, Description = @Description, Picture = @Picture WHERE CategoryID = @CategoryID;";
-                var parameters = new Categories
+                category.CategoryID = id;
+                await Program.Sql.ExecuteAsync(query, category);
+                return new
                 {
-                    CategoryName = category.CategoryName,
-                    Description = category.Description,
-                    Picture = category.Picture,
-                    CategoryID = id
+                    data = category,
+                    status = 0,
+                    msg = "Update category success!"
                 };
-                var data = await Program.Sql.ExecuteAsync(query, parameters);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Error in update category: {ex.Message}");
             }
         }
 
-        public async Task<int> AddCategory(Categories category)
+        public async Task<object> AddCategory(Categories category)
         {
             try
             {
-                var id = await Program.Sql.ExecuteAsync(Extension.GetInsertQuery("Categories", "CategoryID", "CategoryName", "Description", "Picture"), category);
-                return id;
+                var query = Extension.GetInsertQuery("Categories", "CategoryID", "CategoryName", "Description", "Picture");
+                var data = await Program.Sql.QuerySingleAsync<Categories>(query, category);
+                var dataAfterAdd = await GetCategory(data.CategoryID);
+                return new
+                {
+                    data = dataAfterAdd,
+                    status = 200,
+                    msg = "Add category success!"
+                };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error in AddCategory: {ex.Message}");
+                throw new Exception($"Error in add category: {ex.Message}");
             }
 
         }
-        public async Task DeleteCategory(int id)
+        public async Task<object> DeleteCategory(int id)
         {
             try
             {
-                await Program.Sql.ExecuteAsync(Extension.GetDeleteQueryInt("Categories", "CategoryID", id));
+                var query = Extension.GetDeleteQueryInt("Categories", "CategoryID", id);
+                await Program.Sql.ExecuteAsync(query);
+                return new
+                {
+                    status = 200,
+                    msg = $"Delete category with CategoryID {id} success!"
+                };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error in DeleteCategory: {ex.Message}");
+                throw new Exception($"Error in delete category: {ex.Message}");
             }
 
         }
