@@ -9,6 +9,5 @@ namespace Server.Repositories.Interfaces
         public Task<object> DeleteCategory(int id);
         public Task<object> UpdateCategory(int id, Categories category);
         public Task<object> AddCategory(Categories category);
-
     }
 }
