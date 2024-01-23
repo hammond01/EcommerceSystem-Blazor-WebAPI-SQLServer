@@ -5,14 +5,14 @@ using Server.Repositories.Interfaces;
 
 namespace Server.Controllers
 {
-    public class OrdersController(IOrdersServices _repo) : ConBase
+    public class EmployeesController(IEmloyeesServices _repo) : ConBase
     {
         [HttpGet("Gets")]
-        public async Task<IActionResult> GetOrders(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetEmployees()
         {
             try
             {
-                var res = await _repo.GetOrders(page, pageSize);
+                var res = await _repo.GetEmployees();
                 return Ok(res);
             }
             catch (Exception ex)
@@ -21,11 +21,11 @@ namespace Server.Controllers
             }
         }
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetOrder(int id)
+        public async Task<IActionResult> GetEmployee(int id)
         {
             try
             {
-                var res = await _repo.GetOrder(id);
+                var res = await _repo.GetEmployee(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -34,11 +34,11 @@ namespace Server.Controllers
             }
         }
         [HttpPost("Add")]
-        public async Task<IActionResult> AddOrder(Orders order)
+        public async Task<IActionResult> AddEmployee(Employees employees)
         {
             try
             {
-                var data = await _repo.AddOrder(order);
+                var data = await _repo.AddEmployee(employees);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -47,11 +47,11 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, Orders order)
+        public async Task<IActionResult> UpdateEmployee(int id, Employees employees)
         {
             try
             {
-                var data = await _repo.UpdateOrder(id, order);
+                var data = await _repo.UpdateEmployee(id, employees);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -61,11 +61,11 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
             try
             {
-                var data = await _repo.DeleteOrder(id);
+                var data = await _repo.DeleteEmployee(id);
                 return Ok(data);
             }
             catch (Exception ex)

@@ -47,7 +47,7 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, OrderDetails order)
+        public async Task<IActionResult> UpdateOrderDetail(int id, OrderDetails order)
         {
             try
             {

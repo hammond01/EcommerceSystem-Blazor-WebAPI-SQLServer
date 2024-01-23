@@ -2,7 +2,7 @@
 
 namespace Server.Repositories.Interfaces
 {
-    public interface ICustomerServices
+    public interface ICustomersServices
     {
         public Task<object> GetCustomers();
         public Task<object> GetCustomer(string id);

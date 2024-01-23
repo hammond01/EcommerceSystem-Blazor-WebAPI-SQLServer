@@ -5,7 +5,7 @@ using Server.Repositories.Interfaces;
 
 namespace Server.Controllers
 {
-    public class CustomersController(ICustomerServices _repo) : ConBase
+    public class CustomersController(ICustomersServices _repo) : ConBase
     {
         [HttpGet("Gets")]
         public async Task<IActionResult> GetCustomers()
