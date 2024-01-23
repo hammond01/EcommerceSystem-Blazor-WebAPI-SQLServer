@@ -12,7 +12,7 @@ namespace Server.Repositories.Services
             try
             {
                 var query = Extension.GetInsertQuery("Customers", "CustomerID", "CustomerID", "CompanyName", "ContactName", "ContactTitle",
-                                                    "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax");
+                                                    "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax", "UserID");
                 var data = await Program.Sql.QueryFirstOrDefaultAsync<string>(query, customers);
                 customers.CustomerID = data!;
                 return new
