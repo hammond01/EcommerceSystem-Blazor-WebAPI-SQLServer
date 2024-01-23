@@ -7,6 +7,7 @@
         public decimal UnitPrice { get; set; }
         public short Quantity { get; set; }
         public decimal Discount { get; set; }
+        public Products? Products { get; set; }
 
     }
 }
