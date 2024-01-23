@@ -16,7 +16,7 @@
         }
         public static string GetDeleteQueryString(string table, string idColumn, string props)
         {
-            string query = $"DELETE FROM {table} WHERE {idColumn} = {props};";
+            string query = $"DELETE FROM {table} WHERE {idColumn} = '{props}';";
             return query;
         }
     }

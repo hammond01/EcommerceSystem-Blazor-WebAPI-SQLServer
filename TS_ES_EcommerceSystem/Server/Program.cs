@@ -17,6 +17,7 @@ class Program
         builder.Services.AddScoped<ISuppliersServices, SuppliersRepository>();
         builder.Services.AddScoped<IOrdersServices, OrdersRepository>();
         builder.Services.AddScoped<IOrderDetailsServices, OrderDetailsRepository>();
+        builder.Services.AddScoped<ICustomerServices, CustomerRepository>();
 
         // Add services to the container.
 
