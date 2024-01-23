@@ -5,7 +5,7 @@ using Server.Repositories.Interfaces;
 
 namespace Server.Repositories.Services
 {
-    public class CustomerRepository : ICustomersServices
+    public class CustomersRepository : ICustomersServices
     {
         public async Task<object> AddCustomer(Customers customers)
         {
