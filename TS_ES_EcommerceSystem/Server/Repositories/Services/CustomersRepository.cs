@@ -5,14 +5,14 @@ using Server.Repositories.Interfaces;
 
 namespace Server.Repositories.Services
 {
-    public class CustomerRepository : ICustomersServices
+    public class CustomersRepository : ICustomersServices
     {
         public async Task<object> AddCustomer(Customers customers)
         {
             try
             {
                 var query = Extension.GetInsertQuery("Customers", "CustomerID", "CustomerID", "CompanyName", "ContactName", "ContactTitle",
-                                                    "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax", "UserID");
+                                                    "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax");
                 var data = await Program.Sql.QueryFirstOrDefaultAsync<string>(query, customers);
                 customers.CustomerID = data!;
                 return new

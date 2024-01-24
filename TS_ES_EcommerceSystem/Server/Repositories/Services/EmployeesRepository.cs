@@ -13,7 +13,7 @@ namespace Server.Repositories.Services
             {
                 var query = Extension.GetInsertQuery("Employees", "EmployeeID", "LastName", "FirstName", "Title", "TitleOfCourtesy",
                                                     "BirthDate", "HireDate", "Address", "City", "Region", "PostalCode", "Country",
-                                                    "HomePhone", "Extension", "Photo", "Notes", "ReportsTo", "PhotoPath", "UserID");
+                                                    "HomePhone", "Extension", "Photo", "Notes", "ReportsTo", "PhotoPath");
                 var data = await Program.Sql.QueryFirstOrDefaultAsync<int>(query, employees);
                 employees.EmployeeID = data!;
                 return new

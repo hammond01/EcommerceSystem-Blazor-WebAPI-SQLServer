@@ -20,7 +20,5 @@
         public string Notes { get; set; } = null!;
         public int ReportsTo { get; set; }
         public string PhotoPath { get; set; } = null!;
-        public int UserID { get; set; }
-
     }
 }
