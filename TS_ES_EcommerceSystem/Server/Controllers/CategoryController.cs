@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
 
@@ -46,6 +47,7 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateCategory(int id, Categories category)
         {
             try
@@ -60,6 +62,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try

@@ -9,7 +9,7 @@ namespace Server.Controllers
     public class AuthenticationsController(IAccountRoleServices _repo) : ConBase
     {
         [HttpGet("get-roles")]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetRoles()
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Server.Controllers
         {
             try
             {
-                var res = await _repo.LoginUser(login.UserName, login.Password);
+                var res = await _repo.LoginUser(login);
                 return Ok(res);
             }
             catch (Exception ex)

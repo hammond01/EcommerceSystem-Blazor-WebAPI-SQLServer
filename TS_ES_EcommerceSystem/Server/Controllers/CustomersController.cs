@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
@@ -8,11 +9,11 @@ namespace Server.Controllers
     public class CustomersController(ICustomersServices _repo) : ConBase
     {
         [HttpGet("Gets")]
-        public async Task<IActionResult> GetCustomers()
+        public async Task<IActionResult> GetCustomers(int page = 1, int pageSize = 10, string contactName = "")
         {
             try
             {
-                var res = await _repo.GetCustomers();
+                var res = await _repo.GetCustomers(page, pageSize, contactName);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -49,6 +50,7 @@ namespace Server.Controllers
         }
 
         [HttpPut("Update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateCustomer(string id, Customers customers)
         {
             try
@@ -63,6 +65,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCustomer(string id)
         {
             try

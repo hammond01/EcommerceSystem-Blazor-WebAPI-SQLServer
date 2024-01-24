@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
@@ -47,6 +48,7 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateOrderDetail(int id, OrderDetails order)
         {
             try
@@ -61,6 +63,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{orderID}/{productID}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOrderDetail(int orderID, int productID)
         {
             try

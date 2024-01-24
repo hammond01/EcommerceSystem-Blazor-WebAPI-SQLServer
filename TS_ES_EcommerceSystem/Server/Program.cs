@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 class Program
 {
@@ -39,6 +40,11 @@ class Program
         builder.Services.Configure<Appsettings>(builder.Configuration.GetSection("Appsettings"));
         var secretKey = builder.Configuration["Appsettings:SecretKey"]!;
         var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
+        if (secretKeyBytes.Length < 64)
+        {
+            secretKeyBytes = SHA512.Create().ComputeHash(secretKeyBytes);
+        }
 
         //Add JWT
         builder.Services

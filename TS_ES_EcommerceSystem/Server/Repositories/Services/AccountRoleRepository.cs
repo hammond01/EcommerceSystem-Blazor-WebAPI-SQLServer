@@ -7,6 +7,7 @@ using Server.Helper.JWTModel;
 using Server.Repositories.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Server.Repositories.Services
@@ -18,7 +19,6 @@ namespace Server.Repositories.Services
         {
             _appsettings = optionsMonitor.CurrentValue;
         }
-
 
 
         public async Task<object> GetRoleByName(string name)
@@ -112,23 +112,23 @@ namespace Server.Repositories.Services
             }
         }
 
-        public async Task<object> LoginUser(string userName, string password)
+        public async Task<object> LoginUser(LoginModel loginModel)
         {
             try
             {
 
                 var hashedPasswordQuery = @"SELECT Password FROM Users WHERE UserName = @userName";
-                var hashedPassword = await Program.Sql.QueryFirstOrDefaultAsync<string>(hashedPasswordQuery, new { userName });
+                var hashedPassword = await Program.Sql.QueryFirstOrDefaultAsync<string>(hashedPasswordQuery, new { loginModel.UserName });
 
 
-                if (BCrypt.Net.BCrypt.Verify(password, hashedPassword))
+                if (BCrypt.Net.BCrypt.Verify(loginModel.Password, hashedPassword))
                 {
                     var checkRoleAccountQuery = @"SELECT r.RoleName FROM Users u LEFT JOIN Roles r ON u.RoleID = r.RoleID WHERE u.UserName = @userName";
-                    var role = await Program.Sql.QuerySingleOrDefaultAsync<string>(checkRoleAccountQuery, new { userName });
+                    var role = await Program.Sql.QuerySingleOrDefaultAsync<string>(checkRoleAccountQuery, new { loginModel.UserName });
                     var check = _appsettings!.SecretKey;
                     return new
                     {
-                        data = GenerateToken(userName, role!),
+                        data = GenerateToken(loginModel.UserName!, role!),
                         status = 200,
                         msg = "Login success!"
                     };
@@ -149,12 +149,15 @@ namespace Server.Repositories.Services
             }
         }
 
-        private string GenerateToken(string userName, string roles)
+        private JWTModel GenerateToken(string userName, string roles)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appsettings!.SecretKey!);
-
+            if (secretKeyBytes.Length < 64)
+            {
+                secretKeyBytes = SHA512.Create().ComputeHash(secretKeyBytes);
+            }
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(
@@ -165,14 +168,29 @@ namespace Server.Repositories.Services
                         new Claim(ClaimTypes.Role, roles)
                     }
                 ),
-                Expires = DateTime.UtcNow.AddHours(9),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(secretKeyBytes),
                     SecurityAlgorithms.HmacSha512Signature
                 )
             };
             var token = jwtTokenHandler.CreateToken(tokenDescription);
-            return jwtTokenHandler.WriteToken(token);
+            var accessToken = jwtTokenHandler.WriteToken(token);
+            return new JWTModel
+            {
+                AccessToken = accessToken,
+                RefreshToken = GenerateRefreshToken(),
+            };
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var random = new byte[64];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(random);
+                return Convert.ToBase64String(random);
+            }
         }
     }
 

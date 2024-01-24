@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
@@ -34,6 +35,7 @@ namespace Server.Controllers
             }
         }
         [HttpPost("Add")]
+        [Authorize]
         public async Task<IActionResult> AddSupplier(Suppliers supplier)
         {
             try
@@ -47,6 +49,7 @@ namespace Server.Controllers
             }
         }
         [HttpPut("Update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateSupplier(int id, Suppliers supplier)
         {
             try
@@ -61,6 +64,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSupplier(int id)
         {
             try

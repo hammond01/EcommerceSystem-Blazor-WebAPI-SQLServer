@@ -65,11 +65,20 @@ namespace Server.Repositories.Services
             }
         }
 
-        public async Task<object> GetCustomers()
+        public async Task<object> GetCustomers(int page, int pageSize, string contactName)
         {
             try
             {
-                var query = @"SELECT * FROM Customers";
+                int offset = (page - 1) * pageSize;
+
+                string whereClause = string.IsNullOrEmpty(contactName) ? "" : $"WHERE ContactName LIKE '%{contactName}%'";
+
+                var query = $@"SELECT * FROM Customers
+                       {whereClause}
+                       ORDER BY CustomerID
+                       OFFSET {offset} ROWS
+                       FETCH NEXT {pageSize} ROWS ONLY;";
+
                 var res = (await Program.Sql.QueryAsync<Customers>(query)).AsList();
                 return new
                 {
