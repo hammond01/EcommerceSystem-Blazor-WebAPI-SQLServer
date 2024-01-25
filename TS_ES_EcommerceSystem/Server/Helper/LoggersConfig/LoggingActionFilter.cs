@@ -13,14 +13,20 @@ namespace Server.Helper.LoggersConfig
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var actionName = context.ActionDescriptor.DisplayName;
-            _logger.LogInformation($"Executing action: {actionName}");
+            var controller = context.Controller.GetType().Name;
+            var action = context.ActionDescriptor.RouteValues["action"];
+            var parameters = context.ActionArguments;
+
+            _logger.LogInformation($"Executing {controller} => {action} with parameters: {Newtonsoft.Json.JsonConvert.SerializeObject(parameters)}");
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            var actionName = context.ActionDescriptor.DisplayName;
-            _logger.LogInformation($"Executed action: {actionName}");
+            var controller = context.Controller.GetType().Name;
+            var action = context.ActionDescriptor.RouteValues["action"];
+
+            _logger.LogInformation($"Executed {controller} => {action}");
         }
     }
+
 }

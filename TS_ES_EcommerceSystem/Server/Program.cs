@@ -23,9 +23,22 @@ class Program
         Log.Logger = new LoggerConfiguration()
                             .MinimumLevel.Information()
                             .WriteTo.Console()
-                            .WriteTo.File("Helper/Logger/Logger.txt", rollingInterval: RollingInterval.Day)
+                            .WriteTo.File("Helper/Log/Logger.txt", rollingInterval: RollingInterval.Day)
                             .CreateLogger();
         builder.Host.UseSerilog();
+
+        // Add Cors ALL Option
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
+
+
 
         //Add Dependency Injection
         builder.Services.AddScoped<ICategoriesServices, CategoriesRepository>();
@@ -88,6 +101,8 @@ class Program
         app.UseAuthentication();
 
         app.UseAuthorization();
+
+        app.UseCors("AllowAll");
 
         app.MapControllers();
 

@@ -18,13 +18,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = customers,
-                    status = 200,
-                    msg = "Add customer success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add customer: {ex.Message}");
+                throw;
             }
         }
 
@@ -36,13 +35,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete customer with CustomerID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete customer: {ex.Message}");
+                throw;
             }
         }
 
@@ -55,13 +53,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get customer success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get customer: {ex.Message}");
+                throw;
             }
         }
 
@@ -83,13 +80,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get customers success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get customers: {ex.Message}");
+                throw;
             }
         }
 
@@ -116,13 +112,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = customers,
-                    status = 0,
-                    msg = "Update customer success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update customer: {ex.Message}");
+                throw;
             }
         }
     }

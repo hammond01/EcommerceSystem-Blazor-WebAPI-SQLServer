@@ -50,11 +50,11 @@ namespace Server.Controllers
         {
             try
             {
-                _logger.LogInformation($"Attempting to add category with:{category}");
+                _logger.LogInformation($"Attempting to add category");
 
                 var data = await _repo.AddCategory(category);
 
-                _logger.LogInformation($"Successfully add category with:{category}");
+                _logger.LogInformation($"Successfully add category");
 
                 return Ok(data);
             }
@@ -70,11 +70,11 @@ namespace Server.Controllers
         {
             try
             {
-                _logger.LogInformation($"Attempting to update category with ID {id}, {category}");
+                _logger.LogInformation($"Attempting to update category with ID {id}");
 
                 var data = await _repo.UpdateCategory(id, category);
 
-                _logger.LogInformation($"Successfully update category with ID {id}, {category}");
+                _logger.LogInformation($"Successfully update category with ID {id}");
 
                 return Ok(data);
             }
