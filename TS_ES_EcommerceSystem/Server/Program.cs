@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Server.Helper.LoggersConfig;
 using Server.Repositories.Interfaces;
 using Server.Repositories.Services;
 using ServerLibrary.Repositories.Services;
 using System.Data.SqlClient;
+using System.Text;
 
 class Program
 {
@@ -10,8 +15,19 @@ class Program
 
     private static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
 
+
+
+        var builder = WebApplication.CreateBuilder(args);
+        // Config Serilog Logger
+        Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Information()
+                            .WriteTo.Console()
+                            .WriteTo.File("Helper/Logger/Logger.txt", rollingInterval: RollingInterval.Day)
+                            .CreateLogger();
+        builder.Host.UseSerilog();
+
+        //Add Dependency Injection
         builder.Services.AddScoped<ICategoriesServices, CategoriesRepository>();
         builder.Services.AddScoped<IProductsServices, ProductsRepository>();
         builder.Services.AddScoped<ISuppliersServices, SuppliersRepository>();
@@ -22,17 +38,43 @@ class Program
         builder.Services.AddScoped<IEmloyeesServices, EmployeesRepository>();
 
         // Add services to the container.
-
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<LoggingActionFilter>();
+        });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddAuthentication(h =>
+        {
+            h.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            h.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            h.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(h =>
+        {
+            h.SaveToken = true;
+            h.RequireHttpsMetadata = false;
+            h.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!))
+            };
+        });
+
+        //Register ILogger and LoggerFactory
+        builder.Services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.AddConsole();
+        });
 
         var app = builder.Build();
         Config = app.Configuration;
         Sql = new SqlConnection(Config["SQL"]);
         Sql.Open();
-
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -42,6 +84,8 @@ class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

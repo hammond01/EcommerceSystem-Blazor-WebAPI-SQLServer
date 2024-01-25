@@ -16,13 +16,12 @@ namespace ServerLibrary.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get category success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get category: {ex.Message}");
+                throw;
             }
         }
 
@@ -36,13 +35,12 @@ namespace ServerLibrary.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get categories success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get categories: {ex.Message}");
+                throw;
             }
         }
 
@@ -56,13 +54,12 @@ namespace ServerLibrary.Repositories.Services
                 return new
                 {
                     data = category,
-                    status = 0,
-                    msg = "Update category success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update category: {ex.Message}");
+                throw;
             }
         }
 
@@ -76,13 +73,12 @@ namespace ServerLibrary.Repositories.Services
                 return new
                 {
                     data = category,
-                    status = 200,
-                    msg = "Add category success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add category: {ex.Message}");
+                throw;
             }
 
         }
@@ -94,13 +90,12 @@ namespace ServerLibrary.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete category with CategoryID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete category: {ex.Message}");
+                throw;
             }
         }
     }

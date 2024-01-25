@@ -64,7 +64,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteSupplier(int id)
         {
             try

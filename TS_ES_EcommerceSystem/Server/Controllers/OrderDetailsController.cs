@@ -63,7 +63,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{orderID}/{productID}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteOrderDetail(int orderID, int productID)
         {
             try
