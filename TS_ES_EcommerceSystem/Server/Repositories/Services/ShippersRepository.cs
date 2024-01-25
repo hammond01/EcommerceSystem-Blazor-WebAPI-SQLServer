@@ -18,13 +18,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = shippers,
-                    status = 200,
-                    msg = "Add shipper success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add new shipper: {ex.Message}");
+                throw;
             }
         }
 
@@ -36,13 +35,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete shipper with ShipperID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete shipper: {ex.Message}");
+                throw;
             }
         }
 
@@ -55,13 +53,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get shipper success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get shipper by id: {ex.Message}");
+                throw;
             }
         }
 
@@ -74,13 +71,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get shippers success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get shippers: {ex.Message}");
+                throw;
             }
         }
 
@@ -95,13 +91,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = shippers,
-                    status = 0,
-                    msg = "Update shipper success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update shipper: {ex.Message}");
+                throw;
             }
         }
     }

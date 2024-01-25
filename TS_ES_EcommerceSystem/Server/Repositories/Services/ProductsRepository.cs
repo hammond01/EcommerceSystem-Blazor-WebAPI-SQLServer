@@ -19,13 +19,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = product,
-                    status = 200,
-                    msg = "Add product success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add new product: {ex.Message}");
+                throw;
             }
         }
 
@@ -51,45 +50,56 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get product success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get product: {ex.Message}");
+                throw;
             }
         }
 
-        public async Task<object> GetProducts()
+        public async Task<object> GetProducts(int page, int pageSize, string productName)
         {
             try
             {
-                var query = @"SELECT *
-                                FROM Products p
-                                LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
-                                LEFT JOIN Suppliers s ON p.SupplierID = s.SupplierID";
-                var res = await Program.Sql.QueryAsync<Products, Categories, Suppliers, Products>(query,
+                var offset = (page - 1) * pageSize;
+
+                var query = @"SELECT p.*, c.*, s.*
+                      FROM Products p
+                      LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+                      LEFT JOIN Suppliers s ON p.SupplierID = s.SupplierID
+                      WHERE (@productName IS NULL OR p.ProductName LIKE '%' + @productName + '%')
+                      ORDER BY p.ProductID
+                      OFFSET @offset ROWS
+                      FETCH NEXT @pageSize ROWS ONLY;";
+
+                var parameters = new { productName, offset, pageSize };
+
+                var res = await Program.Sql.QueryAsync<Products, Categories, Suppliers, Products>(
+                    query,
                     (product, category, supplier) =>
                     {
                         product.Categories = category;
                         product.Suppliers = supplier;
                         return product;
                     },
+                    parameters,
                     splitOn: "CategoryID, SupplierID"
-                    );
+                );
+
                 return new
                 {
                     data = res.AsList(),
-                    status = 200,
-                    msg = "Get products success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get products: {ex.Message}");
+                throw;
             }
         }
+
 
         public async Task<object> UpdateProduct(int id, Products product)
         {
@@ -111,13 +121,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = product,
-                    status = 0,
-                    msg = "Update product success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update product: {ex.Message}");
+                throw;
             }
         }
         public async Task<object> DeleteProduct(int id)
@@ -128,13 +137,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete product with ProductID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete product: {ex.Message}");
+                throw;
             }
         }
     }

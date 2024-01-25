@@ -23,13 +23,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get order success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get orders: {ex.Message}");
+                throw;
             }
         }
 
@@ -53,13 +52,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get orders success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get orders: {ex.Message}");
+                throw;
             }
         }
         public async Task<object> AddOrder(Orders orders)
@@ -74,13 +72,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = orders,
-                    status = 200,
-                    msg = "Add order success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add new order: {ex.Message}");
+                throw;
             }
         }
 
@@ -92,13 +89,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete order with OrderID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete order: {ex.Message}");
+                throw;
             }
         }
 
@@ -128,13 +124,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = orders,
-                    status = 0,
-                    msg = "Update order success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update order: {ex.Message}");
+                throw;
             }
         }
     }

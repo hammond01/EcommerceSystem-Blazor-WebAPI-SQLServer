@@ -1,24 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Server.Repositories.Interfaces;
 
 namespace Server.Controllers
 {
-    public class ProductsController(IProductsServices _repo) : ConBase
+    public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger) : ConBase
     {
         [HttpGet("Gets")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10, string productName = "")
         {
             try
             {
-                var res = await _repo.GetProducts();
+                _logger.LogInformation($"Attempting to get products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
+                var res = await _repo.GetProducts(page, pageSize, productName);
+
+                _logger.LogInformation($"Successfully retrieved products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
                 return Ok(res);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError($"Error while getting products with page = {page}, pageSize = {pageSize}, productName = {productName}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
         [HttpGet("Get/{id}")]
@@ -26,12 +31,18 @@ namespace Server.Controllers
         {
             try
             {
+                _logger.LogInformation($"Attempting to get product with ID: {id}");
+
                 var res = await _repo.GetProduct(id);
+
+                _logger.LogInformation($"Successfully retrieved product with ID: {id}");
+
                 return Ok(res);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError($"Error while getting product with ID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -40,12 +51,18 @@ namespace Server.Controllers
         {
             try
             {
+                _logger.LogInformation($"Attempting to add product");
+
                 var res = await _repo.AddProduct(product);
+
+                _logger.LogInformation($"Successfully add product");
+
                 return Ok(res);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError($"Error while getting add product: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -55,12 +72,18 @@ namespace Server.Controllers
         {
             try
             {
-                var res = await _repo.UpdateProduct(id, product);
-                return Ok(res);
+                _logger.LogInformation($"Attempting to update product with ID {id}");
+
+                var data = await _repo.UpdateProduct(id, product);
+
+                _logger.LogInformation($"Successfully update product with ID {id}");
+
+                return Ok(data);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError($"Error while getting update product: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -70,12 +93,18 @@ namespace Server.Controllers
         {
             try
             {
-                var res = await _repo.DeleteProduct(id);
-                return Ok(res);
+                _logger.LogInformation($"Attempting to delete product with productID {id}");
+
+                var data = await _repo.DeleteProduct(id);
+
+                _logger.LogInformation($"Successfully delete product with productID {id}");
+
+                return Ok(data);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError($"Error while getting delete product with productID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
     }

@@ -16,13 +16,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get suppliers success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get suppliers: {ex.Message}");
+                throw;
             }
         }
 
@@ -35,13 +34,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get supplier success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get supplier: {ex.Message}");
+                throw;
             }
         }
 
@@ -69,13 +67,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = supplier,
-                    status = 0,
-                    msg = "Update supplier success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update category: {ex.Message}");
+                throw;
             }
         }
         public async Task<object> AddSupplier(Suppliers supplier)
@@ -90,13 +87,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = supplier,
-                    status = 200,
-                    msg = "Add supplier success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add supplier: {ex.Message}");
+                throw;
             }
         }
 
@@ -108,13 +104,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete supplier with SupplierID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete category: {ex.Message}");
+                throw;
             }
         }
     }
