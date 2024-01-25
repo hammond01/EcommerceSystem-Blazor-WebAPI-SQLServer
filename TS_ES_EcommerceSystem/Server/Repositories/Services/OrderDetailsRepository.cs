@@ -18,13 +18,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = orderDetails,
-                    status = 200,
-                    msg = "Add order detail success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add new order detail: {ex.Message}");
+                throw;
             }
         }
 
@@ -40,13 +39,12 @@ namespace Server.Repositories.Services
                 });
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete order detail with OrderID {orderID} and ProductID {productID} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete order detail: {ex.Message}");
+                throw;
             }
         }
 
@@ -68,13 +66,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get orders detail success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get order detail: {ex.Message}");
+                throw;
             }
         }
 
@@ -95,13 +92,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get orders detail success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get orders detail: {ex.Message}");
+                throw;
             }
         }
 
@@ -121,13 +117,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = orderDetails,
-                    status = 0,
-                    msg = "Update orders detail success!"
+                    status = 0
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update orders detail: {ex.Message}");
+                throw;
             }
         }
     }

@@ -19,13 +19,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = employees,
-                    status = 200,
-                    msg = "Add employee success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in add employee: {ex.Message}");
+                throw;
             }
         }
 
@@ -37,13 +36,12 @@ namespace Server.Repositories.Services
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
-                    status = 200,
-                    msg = $"Delete employee with EmployeeID {id} success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in delete employee: {ex.Message}");
+                throw;
             }
         }
 
@@ -56,34 +54,45 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get employee success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get employee: {ex.Message}");
+                throw;
             }
         }
 
-        public async Task<object> GetEmployees()
+        public async Task<object> GetEmployees(int page, int pageSize, string fullName)
         {
             try
             {
-                var query = @"SELECT * FROM Employees;";
-                var res = (await Program.Sql.QueryAsync<Employees>(query)).AsList();
+                var offset = (page - 1) * pageSize;
+
+                var query = @"SELECT * FROM Employees WHERE 
+                                                            (@fullName IS NULL OR 
+                                                                (CONCAT(FirstName, ' ', LastName) LIKE '%' + @fullName + '%') OR
+                                                                (CONCAT(LastName, ' ', FirstName) LIKE '%' + @fullName + '%'))
+                                                            ORDER BY EmployeeID
+                                                            OFFSET @offset ROWS
+                                                            FETCH NEXT @pageSize ROWS ONLY;";
+
+                var parameters = new { fullName, offset, pageSize };
+
+                var res = (await Program.Sql.QueryAsync<Employees>(query, parameters)).AsList();
+
                 return new
                 {
                     data = res,
-                    status = 200,
-                    msg = "Get employees success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in get employees: {ex.Message}");
+                throw;
             }
         }
+
 
         public async Task<object> UpdateEmployee(int id, Employees employees)
         {
@@ -114,13 +123,12 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = employees,
-                    status = 0,
-                    msg = "Update employee success!"
+                    status = 200
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Error in update employee: {ex.Message}");
+                throw;
             }
         }
     }
