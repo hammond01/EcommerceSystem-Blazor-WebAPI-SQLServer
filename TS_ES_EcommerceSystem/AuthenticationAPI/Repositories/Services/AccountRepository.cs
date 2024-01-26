@@ -58,6 +58,7 @@ namespace AuthenticationAPI.Repositories.Services
                     return new
                     {
                         data = "",
+                        status = 500,
                         message = "Login fail"
                     };
                 }
@@ -88,12 +89,14 @@ namespace AuthenticationAPI.Repositories.Services
                     return new
                     {
                         data = "",
+                        status = 500,
                         message = "Login fail"
                     };
                 }
                 return new
                 {
                     data = jwt,
+                    status = 200,
                     message = "Login success"
                 };
             }
