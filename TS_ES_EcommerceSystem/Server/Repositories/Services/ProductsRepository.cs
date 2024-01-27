@@ -74,6 +74,13 @@ namespace Server.Repositories.Services
                       OFFSET @offset ROWS
                       FETCH NEXT @pageSize ROWS ONLY;";
 
+                var totalProduct = @"SELECT COUNT(*) FROM Products";
+                var resTotalProduct = await Program.Sql.QuerySingleAsync<int>(totalProduct);
+
+                double totalPage = resTotalProduct / pageSize;
+
+                int roundedTotalPage = (int)Math.Ceiling(totalPage);
+
                 var parameters = new { productName, offset, pageSize };
 
                 var res = await Program.Sql.QueryAsync<Products, Categories, Suppliers, Products>(
@@ -91,6 +98,7 @@ namespace Server.Repositories.Services
                 return new
                 {
                     data = res.AsList(),
+                    totalPage = roundedTotalPage,
                     status = 200
                 };
             }

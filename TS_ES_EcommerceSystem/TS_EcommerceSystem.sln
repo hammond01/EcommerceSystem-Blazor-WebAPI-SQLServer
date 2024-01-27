@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationAPI", "AuthenticationAPI\AuthenticationAPI.csproj", "{1986BFF1-3A97-4528-8F5E-3647D9430613}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{CFEE9CBE-F62D-4CE4-826D-CAD9BD38815D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{CFEE9CBE-F62D-4CE4-826D-CAD9BD38815D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
