@@ -27,6 +27,7 @@ namespace Client.Pages.ProductManagers
         protected SuppliersServices suppliersServices { get; set; } = default!;
         protected override async Task OnInitializedAsync()
         {
+            productModel ??= new();
             await LoadProducts(currentPage, pageSize, searchTerm);
             await LoadCategories();
             await LoadSuppliers();
@@ -45,7 +46,7 @@ namespace Client.Pages.ProductManagers
                 ReorderLevel = productModel.ReorderLevel,
                 Discontinued = true,
             };
-            //await productServices.CreateProduct(data);
+            await productServices.CreateProduct(data);
 
         }
 

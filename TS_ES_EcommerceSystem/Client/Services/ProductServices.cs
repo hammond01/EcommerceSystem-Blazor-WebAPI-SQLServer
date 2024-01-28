@@ -33,21 +33,21 @@ namespace Client.Services
 
             return (new List<Products>(), 0);
         }
-        //public async Task<string> CreateProduct(Products product)
-        //{
-        //    var request = await _client.PostAsJsonAsync($"v1/Products/Add", product);
-        //    if (request.IsSuccessStatusCode)
-        //    {
-        //        var jsonString = await request.Content.ReadAsStringAsync();
-        //        var json = JsonDocument.Parse(jsonString).RootElement;
+        public async Task<string> CreateProduct(Products product)
+        {
+            var request = await _client.PostAsJsonAsync($"v1/Products/Add", product);
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
 
-        //        if (json.GetProperty("status").GetInt16() == 200)
-        //        {
-        //            //var r = json.GetProperty("data").GetObject<Products>();
-        //            return "Created";
-        //        }
-        //    }
-        //    return "";
-        //}
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    //var r = json.GetProperty("data").GetObject<Products>();
+                    return "Created";
+                }
+            }
+            return "";
+        }
     }
 }
