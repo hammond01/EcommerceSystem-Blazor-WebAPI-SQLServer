@@ -46,6 +46,26 @@ namespace Server.Controllers
             }
         }
 
+        [HttpGet("get-product/{id}")]
+        public async Task<IActionResult> GetProductEdit(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to get product with ID: {id}");
+
+                var res = await _repo.GetProductEdit(id);
+
+                _logger.LogInformation($"Successfully retrieved product with ID: {id}");
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting product with ID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
         [HttpPost("Add")]
         public async Task<IActionResult> AddProduct(Products product)
         {
@@ -67,7 +87,7 @@ namespace Server.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateProduct(int id, Products product)
         {
             try
@@ -88,7 +108,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             try

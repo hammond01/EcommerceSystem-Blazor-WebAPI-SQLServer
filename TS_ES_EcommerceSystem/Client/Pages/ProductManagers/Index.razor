@@ -40,10 +40,10 @@ else
                     <td>@product.UnitPrice</td>
                     <td>@product.UnitsInStock</td>
                     <td class=" d-flex">
-                        <a class="w-50 btn btn-success mx-2 my-auto" href="EditProduct/@product.ProductID">
+                        <a class="w-50 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => EditProduct(product.ProductID)">
                             <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
                         </a>
-                        <a class="w-50 btn btn-danger mx-2 my-auto" href="DeleteProduct/@product.ProductID">
+                        <a class="w-50 btn btn-danger mx-2 my-auto" @onclick="() => DeleteProduct(product.ProductID)">
                             <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
                         </a>
                     </td>
@@ -56,7 +56,7 @@ else
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="addModalLabel">@((productModel!.ProductID == 0 ? "Add" : "Edit") + " Product")</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -111,7 +111,7 @@ else
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit">Save changes</button>
+                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit">@((productModel.ProductID == 0 ? "Create new" : "Edit") + " product")</button>
                         </div>
                     </EditForm>
                 </div>

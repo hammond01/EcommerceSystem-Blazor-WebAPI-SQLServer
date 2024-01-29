@@ -59,6 +59,27 @@ namespace Server.Repositories.Services
             }
         }
 
+        public async Task<object> GetProductEdit(int id)
+        {
+            try
+            {
+                var query = @"SELECT *
+                                FROM Products p
+                                    WHERE ProductID = @id;";
+                var res = await Program.Sql.QuerySingleAsync<Products>(query, new { id }
+                    );
+                return new
+                {
+                    data = res,
+                    status = 200
+                };
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task<object> GetProducts(int page, int pageSize, string productName)
         {
             try

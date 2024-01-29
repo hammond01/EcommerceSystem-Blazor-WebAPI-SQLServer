@@ -1,5 +1,6 @@
 using Client;
 using Client.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -29,7 +30,9 @@ class Program
         builder.Services.AddScoped<ProductServices>();
         builder.Services.AddScoped<CategoryServices>();
         builder.Services.AddScoped<SuppliersServices>();
+        builder.Services.AddScoped<SweetAlertService>();
         builder.Services.AddBlazorBootstrap();
+        builder.Services.AddSweetAlert2();
         await builder.Build().RunAsync();
     }
 }

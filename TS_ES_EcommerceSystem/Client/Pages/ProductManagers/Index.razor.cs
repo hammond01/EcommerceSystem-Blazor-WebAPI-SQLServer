@@ -1,5 +1,7 @@
 ﻿using Client.Services;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Models;
 
 namespace Client.Pages.ProductManagers
@@ -25,6 +27,9 @@ namespace Client.Pages.ProductManagers
         protected CategoryServices categoryServices { get; set; } = default!;
         [Inject]
         protected SuppliersServices suppliersServices { get; set; } = default!;
+        [Inject]
+        protected SweetAlertService Swal { get; set; } = default!;
+
         protected override async Task OnInitializedAsync()
         {
             productModel ??= new();
@@ -34,21 +39,99 @@ namespace Client.Pages.ProductManagers
         }
         protected async Task CreateProduct()
         {
-            var data = new Products
+
+            if (productModel!.ProductID == 0)
             {
-                ProductName = productModel.ProductName,
-                CategoryID = productModel.CategoryID,
-                SupplierID = productModel.SupplierID,
-                QuantityPerUnit = productModel.QuantityPerUnit,
-                UnitPrice = productModel.UnitPrice,
-                UnitsInStock = productModel.UnitsInStock,
-                UnitsOnOrder = 0,
-                ReorderLevel = productModel.ReorderLevel,
-                Discontinued = true,
-            };
-            await productServices.CreateProduct(data);
+                var data = new Products
+                {
+                    ProductName = productModel!.ProductName,
+                    CategoryID = productModel.CategoryID,
+                    SupplierID = productModel.SupplierID,
+                    QuantityPerUnit = productModel.QuantityPerUnit,
+                    UnitPrice = productModel.UnitPrice,
+                    UnitsInStock = productModel.UnitsInStock,
+                    UnitsOnOrder = 0,
+                    ReorderLevel = productModel.ReorderLevel,
+                    Discontinued = true,
+                };
+                var res = await productServices.CreateProduct(data);
+
+                if (res == "Created")
+                {
+                    await Swal.FireAsync(
+                     "Create",
+                     "Create product success!",
+                     SweetAlertIcon.Success
+                     );
+                    await LoadProducts(currentPage, pageSize, searchTerm);
+
+                }
+                else
+                {
+                    await Swal.FireAsync(
+                     "Cancelled",
+                     "Your imaginary file is safe :)",
+                     SweetAlertIcon.Error
+                     );
+                }
+            }
+            else
+            {
+                // Cập nhật sản phẩm đã tồn tại
+                var update = await productServices.UpdateProduct(productModel);
+                if (update == true)
+                {
+                    await Swal.FireAsync(
+                 "Updated",
+                 "Product has been Updated.",
+                 SweetAlertIcon.Success
+                 );
+                    await LoadProducts(currentPage, pageSize, searchTerm);
+
+                }
+            }
 
         }
+        protected async Task DeleteProduct(int id)
+        {
+            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Are you sure?",
+                Text = "You will not be able to recover this imaginary file!",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Yes, delete it!",
+                CancelButtonText = "No, keep it"
+            });
+
+            if (!string.IsNullOrEmpty(result.Value))
+            {
+                var res = await productServices.DeleteProduct(id);
+
+                await Swal.FireAsync(
+                  "Deleted",
+                  "Product has been deleted.",
+                  SweetAlertIcon.Success
+                  );
+                if (res == "Deleted")
+                {
+                    await LoadProducts(currentPage, pageSize, searchTerm);
+                }
+            }
+            else if (result.Dismiss == DismissReason.Cancel)
+            {
+                await Swal.FireAsync(
+                  "Cancelled",
+                  "Product is safe :)",
+                  SweetAlertIcon.Error
+                  );
+            }
+        }
+        protected async Task EditProduct(int productID)
+        {
+            productModel = await productServices.GetProductById(productID);
+        }
+
 
         protected async Task LoadProducts(int page, int pageSize, string searchTerm)
         {
@@ -81,5 +164,6 @@ namespace Client.Pages.ProductManagers
             await LoadProducts(currentPage, pageSize, searchTerm);
 
         }
+
     }
 }
