@@ -1,7 +1,6 @@
 ﻿using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Models;
 
 namespace Client.Pages.ProductManagers
@@ -15,8 +14,6 @@ namespace Client.Pages.ProductManagers
         private int pageSize = 10;
         private string searchTerm = "";
         private int totalPage;
-        int cateID;
-        int suppID;
 
         [SupplyParameterFromForm]
         Products? productModel { get; set; }
@@ -42,6 +39,7 @@ namespace Client.Pages.ProductManagers
 
             if (productModel!.ProductID == 0)
             {
+                //create new product
                 var data = new Products
                 {
                     ProductName = productModel!.ProductName,
@@ -70,24 +68,31 @@ namespace Client.Pages.ProductManagers
                 {
                     await Swal.FireAsync(
                      "Cancelled",
-                     "Your imaginary file is safe :)",
+                     "Create product is safe :)",
                      SweetAlertIcon.Error
                      );
                 }
             }
             else
             {
-                // Cập nhật sản phẩm đã tồn tại
+                // Update product
                 var update = await productServices.UpdateProduct(productModel);
                 if (update == true)
                 {
                     await Swal.FireAsync(
-                 "Updated",
-                 "Product has been Updated.",
-                 SweetAlertIcon.Success
-                 );
+                                            "Updated",
+                                            "Product has been Updated.",
+                                             SweetAlertIcon.Success
+                                        );
                     await LoadProducts(currentPage, pageSize, searchTerm);
-
+                }
+                else
+                {
+                    await Swal.FireAsync(
+                                            "Error",
+                                            "Product hasn't been Updated.",
+                                            SweetAlertIcon.Error
+                                        );
                 }
             }
 
@@ -108,23 +113,32 @@ namespace Client.Pages.ProductManagers
             {
                 var res = await productServices.DeleteProduct(id);
 
-                await Swal.FireAsync(
-                  "Deleted",
-                  "Product has been deleted.",
-                  SweetAlertIcon.Success
-                  );
+
                 if (res == "Deleted")
                 {
+                    await Swal.FireAsync(
+                                             "Deleted",
+                                             "Product has been deleted.",
+                                             SweetAlertIcon.Success
+                                        );
                     await LoadProducts(currentPage, pageSize, searchTerm);
+                }
+                else
+                {
+                    await Swal.FireAsync(
+                                             "Deleted",
+                                             "Product hasn't been deleted.",
+                                             SweetAlertIcon.Error
+                                        );
                 }
             }
             else if (result.Dismiss == DismissReason.Cancel)
             {
                 await Swal.FireAsync(
-                  "Cancelled",
-                  "Product is safe :)",
-                  SweetAlertIcon.Error
-                  );
+                                          "Cancelled",
+                                          "Product is safe :)",
+                                          SweetAlertIcon.Error
+                                    );
             }
         }
         protected async Task EditProduct(int productID)
