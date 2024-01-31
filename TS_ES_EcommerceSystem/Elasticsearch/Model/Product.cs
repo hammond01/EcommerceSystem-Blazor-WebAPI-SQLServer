@@ -1,11 +1,15 @@
-﻿namespace Elasticsearch.Model
+﻿using Nest;
+
+namespace Elasticsearch.Model
 {
     public class Product
     {
-        public int Id { get; set; } = new Random().Next();
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public string? Author { get; set; }
+        [Keyword]
+        public string? ProductID { get; set; }
+        [Text]
+        public string? ProductName { get; set; }
+        [Number]
+        public decimal UnitPrice { get; set; }
 
     }
 }
