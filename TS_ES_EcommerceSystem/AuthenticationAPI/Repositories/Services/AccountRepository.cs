@@ -14,6 +14,12 @@ namespace AuthenticationAPI.Repositories.Services
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountRepository"/> class.
+        /// </summary>
+        /// <param name="userManager">The user manager.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="roleManager">The role manager.</param>
 
         public AccountRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
@@ -21,10 +27,17 @@ namespace AuthenticationAPI.Repositories.Services
             this.configuration = configuration;
             this.roleManager = roleManager;
         }
+
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="register">The register information.</param>
+        /// <returns>The result of the registration process.</returns>
         public async Task<IdentityResult> Register(Register register)
         {
             try
             {
+                // create a new user
                 var user = new ApplicationUser
                 {
                     FirstName = register.FirstName,
@@ -49,6 +62,11 @@ namespace AuthenticationAPI.Repositories.Services
         }
         public async Task<object> LoginAsync(Login login)
         {
+            /// <summary>
+            /// Authenticates a user using their email and password.
+            /// </summary>
+            /// <param name="login">The login information.</param>
+            /// <returns>A JSON object containing the authentication token and status code.</returns>
             try
             {
                 var user = await userManager.FindByEmailAsync(login.Email);
@@ -66,8 +84,8 @@ namespace AuthenticationAPI.Repositories.Services
 
                 var authClaims = new List<Claim>
             {
-               new Claim(ClaimTypes.Email, login.Email),
-               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Email, login.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
                 foreach (var role in userRole)
                 {
@@ -108,8 +126,14 @@ namespace AuthenticationAPI.Repositories.Services
 
         public async Task<IdentityResult> RegisterEmployee(RegisterEmployee registerEmployee)
         {
+            /// <summary>
+            /// Registers a new user.
+            /// </summary>
+            /// <param name="registerEmployee">The register information.</param>
+            /// <returns>The result of the registration process.</returns>
             try
             {
+                // create a new user
                 var user = new ApplicationUser
                 {
                     FirstName = registerEmployee.FirstName,
@@ -135,6 +159,10 @@ namespace AuthenticationAPI.Repositories.Services
 
         public async Task<object> GetRoles()
         {
+            /// <summary>
+            /// Returns a list of all roles in the system.
+            /// </summary>
+            /// <returns>A list of <see cref="IdentityRole"/> objects.</returns>
             try
             {
                 var roles = await roleManager.Roles.ToListAsync();
