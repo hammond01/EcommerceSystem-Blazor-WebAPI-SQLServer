@@ -18,7 +18,7 @@ namespace AuthenticationAPI.Models
         [Compare("Password")]
         public string ConfirmPassword { get; set; } = null!;
     }
-    public class RegisterEmloyee
+    public class RegisterEmployee
     {
         [Required]
         public string FirstName { get; set; } = null!;

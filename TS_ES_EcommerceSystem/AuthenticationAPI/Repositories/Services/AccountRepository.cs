@@ -106,23 +106,23 @@ namespace AuthenticationAPI.Repositories.Services
             }
         }
 
-        public async Task<IdentityResult> RegisterEmployee(RegisterEmloyee registerEmloyee)
+        public async Task<IdentityResult> RegisterEmployee(RegisterEmployee registerEmployee)
         {
             try
             {
                 var user = new ApplicationUser
                 {
-                    FirstName = registerEmloyee.FirstName,
-                    LastName = registerEmloyee.LastName,
-                    Email = registerEmloyee.Email,
-                    UserName = registerEmloyee.Email
+                    FirstName = registerEmployee.FirstName,
+                    LastName = registerEmployee.LastName,
+                    Email = registerEmployee.Email,
+                    UserName = registerEmployee.Email
                 };
 
-                var result = await userManager.CreateAsync(user, registerEmloyee.Password);
+                var result = await userManager.CreateAsync(user, registerEmployee.Password);
 
                 if (result.Succeeded)
                 {
-                    var role = await roleManager.FindByIdAsync(registerEmloyee.RoleID);
+                    var role = await roleManager.FindByIdAsync(registerEmployee.RoleID);
                     await userManager.AddToRoleAsync(user, role!.Name!);
                 }
                 return result;

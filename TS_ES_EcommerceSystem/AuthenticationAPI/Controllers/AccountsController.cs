@@ -34,9 +34,9 @@ namespace AuthenticationAPI.Controllers
 
         [HttpPost("create-employee")]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> CreateEmloyee(RegisterEmloyee registerEmloyee)
+        public async Task<IActionResult> CreateEmployee(RegisterEmployee registerEmployee)
         {
-            var result = await repo.RegisterEmployee(registerEmloyee);
+            var result = await repo.RegisterEmployee(registerEmployee);
             return Ok(result);
         }
 

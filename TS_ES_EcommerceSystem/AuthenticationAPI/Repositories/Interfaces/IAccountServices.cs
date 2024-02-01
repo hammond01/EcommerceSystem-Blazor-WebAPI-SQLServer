@@ -7,7 +7,7 @@ namespace AuthenticationAPI.Repositories.Interfaces
     {
         public Task<object> LoginAsync(Login login);
         public Task<IdentityResult> Register(Register register);
-        public Task<IdentityResult> RegisterEmployee(RegisterEmloyee registerEmloyee);
+        public Task<IdentityResult> RegisterEmployee(RegisterEmployee registerEmployee);
         public Task<object> GetRoles();
 
     }
