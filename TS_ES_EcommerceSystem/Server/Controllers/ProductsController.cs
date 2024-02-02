@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json;
+using Server.Helper;
 using Server.Repositories.Interfaces;
+using System.Text;
 
 namespace Server.Controllers
 {
-    public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger) : ConBase
+    public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger, WebHookConfig _webHookConfig) : ConBase
     {
+        private List<string> _webhookUrls = new List<string>();
         [HttpGet("Gets")]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10, string productName = "")
         {
@@ -77,6 +82,8 @@ namespace Server.Controllers
 
                 _logger.LogInformation($"Successfully add product");
 
+                _webHookConfig.NotifyWebhookApi(product, "addProduct");
+
                 return Ok(res);
             }
             catch (Exception ex)
@@ -127,5 +134,6 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
     }
 }

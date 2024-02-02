@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Server.Helper;
 using Server.Helper.LoggersConfig;
 using Server.Repositories.Interfaces;
 using Server.Repositories.Services;
@@ -110,6 +111,9 @@ class Program
             loggingBuilder.ClearProviders();
             loggingBuilder.AddConsole();
         });
+
+        //Register webhook
+        builder.Services.AddSingleton<WebHookConfig>();
 
         var app = builder.Build();
         Config = app.Configuration;

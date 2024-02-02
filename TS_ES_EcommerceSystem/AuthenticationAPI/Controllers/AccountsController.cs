@@ -1,5 +1,4 @@
-﻿
-using AuthenticationAPI.Models;
+﻿using AuthenticationAPI.Models;
 using AuthenticationAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
