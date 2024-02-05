@@ -1,4 +1,4 @@
-﻿using Elasticsearch.Model;
+﻿using ElasticSearchModelBase;
 
 namespace Elasticsearch.Repository.Interface
 {
@@ -7,11 +7,11 @@ namespace Elasticsearch.Repository.Interface
         Task<bool> CreateDocument(T entity);
         Task<T> GetDocument(string id);
         Task<IEnumerable<T>> GetDocuments();
-        List<Product> Search(string search);
+        List<EProduct> Search(string search);
         Task<bool> UpdateDocument(T entity);
         Task<bool> DeleteDocument(string id);
         Task<bool> SynData(List<T> entity);
-        Product GetProductbyID(string productID);
+        EProduct GetProductbyID(string productID);
 
     }
 }

@@ -53,18 +53,6 @@ namespace Client.Services
                     //var r = json.GetProperty("data").GetObject<Products>();
                     return "Created";
                 }
-
-                //// Check if the 'status' property exists before trying to access it
-                //if (json.TryGetProperty("status", out var statusElement) && statusElement.GetInt16() == 200)
-                //{
-                //    // Access 'data' property if it exists
-                //    if (json.TryGetProperty("data", out var dataElement))
-                //    {
-                //        // Deserialize 'data' as needed (you may need to adjust this based on your actual data structure)
-                //        // var createdProduct = JsonConvert.DeserializeObject<Products>(dataElement.ToString());
-                //        return "Created";
-                //    }
-                //}
             }
             return "";
         }

@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using Elasticsearch.Model;
 using Elasticsearch.Repository.Interface;
+using ElasticSearchModelBase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elasticsearch.Controllers
@@ -9,13 +9,13 @@ namespace Elasticsearch.Controllers
     [ApiController]
     public class ElasticsearchsController : ControllerBase
     {
-        private readonly IElasticsearchService<Product> _repo;
-        public ElasticsearchsController(IElasticsearchService<Product> repo)
+        private readonly IElasticsearchService<EProduct> _repo;
+        public ElasticsearchsController(IElasticsearchService<EProduct> repo)
         {
             _repo = repo;
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        [HttpPost("add")]
+        public async Task<IActionResult> Create(EProduct product)
         {
             var success = await _repo.CreateDocument(product);
             if (success)
@@ -25,7 +25,7 @@ namespace Elasticsearch.Controllers
             return BadRequest("Failed to create product.");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> Get(string id)
         {
             var product = await _repo.GetDocument(id);
@@ -35,7 +35,7 @@ namespace Elasticsearch.Controllers
             }
             return NotFound();
         }
-        [HttpGet]
+        [HttpGet("gets")]
         public async Task<IActionResult> Gets()
         {
             var product = await _repo.GetDocuments();
@@ -46,8 +46,8 @@ namespace Elasticsearch.Controllers
             return NotFound();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Product product)
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(EProduct product)
         {
             var success = await _repo.UpdateDocument(product);
             if (success)
@@ -57,7 +57,7 @@ namespace Elasticsearch.Controllers
             return BadRequest("Failed to update product.");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var success = await _repo.DeleteDocument(id);
@@ -71,18 +71,8 @@ namespace Elasticsearch.Controllers
         public async Task<IActionResult> SynData()
         {
             var query = "SELECT ProductID, ProductName, UnitPrice FROM Products";
-            var products = (await Program.Sql.QueryAsync<Product>(query)).AsList();
+            var products = (await Program.Sql.QueryAsync<EProduct>(query)).AsList();
             var syn = await _repo.SynData(products);
-            //var count = products.Count();
-            //for (var i = 0; i < count; i++)
-            //{
-            //    var product = await _repo.CreateDocument(products[i]);
-            //    if (i == count - 1)
-            //    {
-            //        await Console.Out.WriteLineAsync("Index" + i);
-            //        return Ok(product);
-            //    }
-            //}
             if (syn)
             {
                 return Ok(syn);

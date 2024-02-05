@@ -1,17 +1,12 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Models;
-using Newtonsoft.Json;
-using Server.Helper;
+﻿using Microsoft.AspNetCore.Mvc;
+using Models.ElasticsearchModel;
+using Models.RequestModel;
 using Server.Repositories.Interfaces;
-using System.Text;
 
 namespace Server.Controllers
 {
-    public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger, WebHookConfig _webHookConfig) : ConBase
+    public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger, IMessageProducer _messagePublisher) : ConBase
     {
-        private List<string> _webhookUrls = new List<string>();
         [HttpGet("Gets")]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10, string productName = "")
         {
@@ -71,8 +66,8 @@ namespace Server.Controllers
             }
         }
 
-        [HttpPost("Add")]
-        public async Task<IActionResult> AddProduct(Products product)
+        [HttpPost("add")]
+        public async Task<IActionResult> AddProduct(ProductRequest product)
         {
             try
             {
@@ -82,7 +77,14 @@ namespace Server.Controllers
 
                 _logger.LogInformation($"Successfully add product");
 
-                _webHookConfig.NotifyWebhookApi(product, "addProduct");
+                //Send msg to RabbitMQ
+                var msgModel = new ELasticProduct
+                {
+                    ProductID = product.ProductID,
+                    ProductName = product.ProductName,
+                    UnitPrice = product.UnitPrice,
+                };
+                _messagePublisher.SendMessage(msgModel, "Products", "add");
 
                 return Ok(res);
             }
@@ -95,7 +97,7 @@ namespace Server.Controllers
 
         [HttpPut("Update/{id}")]
         //[Authorize]
-        public async Task<IActionResult> UpdateProduct(int id, Products product)
+        public async Task<IActionResult> UpdateProduct(int id, ProductRequest product)
         {
             try
             {

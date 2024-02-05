@@ -1,15 +1,14 @@
 ﻿using Nest;
 
-namespace Elasticsearch.Model
+namespace ElasticSearchModelBase
 {
-    public class Product
+    public class EProduct
     {
         [Keyword]
-        public string? ProductID { get; set; }
+        public int ProductID { get; set; }
         [Text]
         public string? ProductName { get; set; }
         [Number]
         public decimal UnitPrice { get; set; }
-
     }
 }

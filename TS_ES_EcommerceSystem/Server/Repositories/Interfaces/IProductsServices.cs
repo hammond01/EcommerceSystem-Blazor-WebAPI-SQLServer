@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.RequestModel;
 
 namespace Server.Repositories.Interfaces
 {
@@ -8,7 +9,7 @@ namespace Server.Repositories.Interfaces
         public Task<object> GetProduct(int id);
         public Task<object> GetProductEdit(int id);
         public Task<object> DeleteProduct(int id);
-        public Task<object> UpdateProduct(int id, Products product);
-        public Task<object> AddProduct(Products product);
+        public Task<object> UpdateProduct(int id, ProductRequest product);
+        public Task<object> AddProduct(ProductRequest product);
     }
 }

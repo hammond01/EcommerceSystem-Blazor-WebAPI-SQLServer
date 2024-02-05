@@ -1,6 +1,6 @@
-﻿using Elasticsearch.Model;
-using Elasticsearch.Net;
+﻿using Elasticsearch.Net;
 using Elasticsearch.Repository.Interface;
+using ElasticSearchModelBase;
 using Nest;
 using System.Linq;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
@@ -72,9 +72,9 @@ namespace Elasticsearch.Repository.Services
 
         }
 
-        public List<Product> Search(string search)
+        public List<EProduct> Search(string search)
         {
-            var searchResponse = _elasticClient.Search<Product>(s => s
+            var searchResponse = _elasticClient.Search<EProduct>(s => s
                 .Query(q => q
                     .Prefix(c => c
                                .Field(p => p.ProductName)
@@ -88,13 +88,13 @@ namespace Elasticsearch.Repository.Services
             }
             else
             {
-                return new List<Product>();
+                return new List<EProduct>();
             }
         }
 
-        public Product GetProductbyID(string search)
+        public EProduct GetProductbyID(string search)
         {
-            var searchResponse = _elasticClient.Search<Product>(s => s
+            var searchResponse = _elasticClient.Search<EProduct>(s => s
         .Query(q => q
             .Term(t => t
                 .Field(f => f.ProductID)
@@ -110,7 +110,7 @@ namespace Elasticsearch.Repository.Services
             }
             else
             {
-                return new Product();
+                return new EProduct();
             }
         }
     }

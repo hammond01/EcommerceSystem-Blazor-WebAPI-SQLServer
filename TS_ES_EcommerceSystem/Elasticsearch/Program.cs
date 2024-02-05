@@ -1,6 +1,6 @@
-using Elasticsearch.Model;
 using Elasticsearch.Repository.Interface;
 using Elasticsearch.Repository.Services;
+using ElasticSearchModelBase;
 using Nest;
 using System.Data.SqlClient;
 
@@ -18,7 +18,7 @@ class Program
         var client = new ElasticClient(es);
         builder.Services.AddSingleton(client);
 
-        builder.Services.AddScoped<IElasticsearchService<Product>, ElasticsearchRepository<Product>>();
+        builder.Services.AddScoped<IElasticsearchService<EProduct>, ElasticsearchRepository<EProduct>>();
         //builder.Services.AddScoped<ISynSQLService, SynSQLRepository>();
 
         builder.Services.AddControllers();

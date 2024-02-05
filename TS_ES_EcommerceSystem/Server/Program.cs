@@ -40,19 +40,19 @@ class Program
                 Scheme = "Bearer"
             });
             option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
             {
-                Reference =new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    new OpenApiSecurityScheme
+                    {
+                        Reference =new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
                 }
-            },
-            new string[]{}
-        }
-    });
+            });
         });
 
         // Add Cors ALL Option
@@ -65,8 +65,6 @@ class Program
                        .AllowAnyHeader();
             });
         });
-
-
 
         //Add Dependency Injection
         builder.Services.AddScoped<ICategoriesServices, CategoriesRepository>();
@@ -112,9 +110,16 @@ class Program
             loggingBuilder.AddConsole();
         });
 
-        //Register webhook
-        builder.Services.AddSingleton<WebHookConfig>();
 
+        //Register Http client with WebHookAPI
+        builder.Services.AddScoped(sp =>
+        new HttpClient
+        {
+            BaseAddress = new Uri("https://localhost:7032/api/")
+        }
+        );
+
+        builder.Services.AddScoped<IMessageProducer, RabbitMQProducer>();
         var app = builder.Build();
         Config = app.Configuration;
         Sql = new SqlConnection(Config["SQL"]);

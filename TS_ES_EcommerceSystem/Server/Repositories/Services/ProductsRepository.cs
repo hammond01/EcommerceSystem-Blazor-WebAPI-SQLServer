@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Models;
+using Models.RequestModel;
 using Server.Helper;
 using Server.Repositories.Interfaces;
 
@@ -7,14 +8,14 @@ namespace Server.Repositories.Services
 {
     public class ProductsRepository : IProductsServices
     {
-        public async Task<object> AddProduct(Products product)
+        public async Task<object> AddProduct(ProductRequest product)
         {
             try
             {
                 var query = Extension.GetInsertQuery("Products", "ProductID", "ProductName", "SupplierID", "CategoryID",
                     "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued");
 
-                var data = await Program.Sql.QuerySingleAsync<Products>(query, product);
+                var data = await Program.Sql.QuerySingleAsync<ProductRequest>(query, product);
                 product.ProductID = data.ProductID;
                 return new
                 {
@@ -130,7 +131,7 @@ namespace Server.Repositories.Services
         }
 
 
-        public async Task<object> UpdateProduct(int id, Products product)
+        public async Task<object> UpdateProduct(int id, ProductRequest product)
         {
             try
             {
