@@ -1,4 +1,4 @@
-﻿using ElasticSearchModelBase;
+﻿using Models.ElasticsearchModel;
 
 namespace Elasticsearch.Repository.Interface
 {

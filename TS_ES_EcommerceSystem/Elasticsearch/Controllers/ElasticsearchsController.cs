@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Elasticsearch.Repository.Interface;
-using ElasticSearchModelBase;
 using Microsoft.AspNetCore.Mvc;
+using Models.ElasticsearchModel;
 
 namespace Elasticsearch.Controllers
 {

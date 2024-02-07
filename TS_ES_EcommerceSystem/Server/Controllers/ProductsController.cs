@@ -78,7 +78,7 @@ namespace Server.Controllers
                 _logger.LogInformation($"Successfully add product");
 
                 //Send msg to RabbitMQ
-                var msgModel = new ELasticProduct
+                var msgModel = new EProduct
                 {
                     ProductID = product.ProductID,
                     ProductName = product.ProductName,

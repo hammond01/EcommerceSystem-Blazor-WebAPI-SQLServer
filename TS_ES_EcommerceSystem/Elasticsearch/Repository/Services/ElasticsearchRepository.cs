@@ -1,6 +1,6 @@
 ﻿using Elasticsearch.Net;
 using Elasticsearch.Repository.Interface;
-using ElasticSearchModelBase;
+using Models.ElasticsearchModel;
 using Nest;
 using System.Linq;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;

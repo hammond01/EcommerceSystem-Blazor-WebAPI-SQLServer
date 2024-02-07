@@ -1,5 +1,5 @@
 ﻿using ConsumerMQ.Helper;
-using ElasticSearchModelBase;
+using Models.ElasticsearchModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;

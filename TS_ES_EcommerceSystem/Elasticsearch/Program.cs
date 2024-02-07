@@ -1,6 +1,6 @@
 using Elasticsearch.Repository.Interface;
 using Elasticsearch.Repository.Services;
-using ElasticSearchModelBase;
+using Models.ElasticsearchModel;
 using Nest;
 using System.Data.SqlClient;
 
