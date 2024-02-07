@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Heplers.LoggersConfig;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Server.Helper;
-using Server.Helper.LoggersConfig;
 using Server.Repositories.Interfaces;
 using Server.Repositories.Services;
-using Server.SeedData;
 using ServerLibrary.Repositories.Services;
 using System.Data.SqlClient;
 using System.Text;
@@ -75,6 +73,7 @@ class Program
         builder.Services.AddScoped<ICustomersServices, CustomersRepository>();
         builder.Services.AddScoped<IShippersServices, ShippersRepository>();
         builder.Services.AddScoped<IEmloyeesServices, EmployeesRepository>();
+        builder.Services.AddScoped<IMessageProducer, RabbitMQProducer>();
 
         // Add services to the container.
         builder.Services.AddControllers(options =>
@@ -84,6 +83,7 @@ class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        //Add authentication
         builder.Services.AddAuthentication(h =>
         {
             h.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,7 +119,6 @@ class Program
         }
         );
 
-        builder.Services.AddScoped<IMessageProducer, RabbitMQProducer>();
         var app = builder.Build();
         Config = app.Configuration;
         Sql = new SqlConnection(Config["SQL"]);

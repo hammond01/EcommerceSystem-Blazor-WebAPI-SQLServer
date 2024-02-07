@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
-namespace Server.Helper.LoggersConfig
+namespace Heplers.LoggersConfig
 {
     public class LoggingActionFilter : IActionFilter
     {

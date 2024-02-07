@@ -5,6 +5,6 @@
         public int WareHouseID { get; set; }
         public double CostPrice { get; set; }
         public string? ProductionBatchID { get; set; }
-        public int QuantityTotal { get; }
+        public int QuantityTotal { get; set; }
     }
 }

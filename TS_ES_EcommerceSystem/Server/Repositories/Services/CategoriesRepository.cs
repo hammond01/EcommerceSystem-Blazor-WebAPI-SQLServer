@@ -1,7 +1,7 @@
 ﻿using Models;
 using Dapper;
 using Server.Repositories.Interfaces;
-using Server.Helper;
+using Heplers;
 
 namespace ServerLibrary.Repositories.Services
 {

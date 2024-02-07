@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsumerMQ", "ConsumerMQ\Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Warehouse", "API.Warehouse\API.Warehouse.csproj", "{C999E3E4-3D9F-4612-AE78-EAAD4B675EF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heplers", "Heplers\Heplers.csproj", "{F2A47211-0598-4B75-AF0B-6AAD717F29A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{C999E3E4-3D9F-4612-AE78-EAAD4B675EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C999E3E4-3D9F-4612-AE78-EAAD4B675EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C999E3E4-3D9F-4612-AE78-EAAD4B675EF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2A47211-0598-4B75-AF0B-6AAD717F29A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2A47211-0598-4B75-AF0B-6AAD717F29A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2A47211-0598-4B75-AF0B-6AAD717F29A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2A47211-0598-4B75-AF0B-6AAD717F29A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

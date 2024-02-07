@@ -1,6 +1,6 @@
-﻿namespace Server.Helper
+﻿namespace Heplers
 {
-    public static class Extension
+    public class Extension
     {
         public static string GetInsertQuery(string table, string idColumn, params string[] props)
         {

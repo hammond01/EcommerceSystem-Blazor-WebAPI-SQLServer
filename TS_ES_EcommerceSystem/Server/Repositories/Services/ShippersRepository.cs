@@ -1,6 +1,6 @@
 ﻿using Dapper;
+using Heplers;
 using Models;
-using Server.Helper;
 using Server.Repositories.Interfaces;
 
 namespace Server.Repositories.Services
