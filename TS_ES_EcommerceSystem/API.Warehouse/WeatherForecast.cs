@@ -1,4 +1,4 @@
-namespace WebHooksAPI
+namespace API.Warehouse
 {
     public class WeatherForecast
     {

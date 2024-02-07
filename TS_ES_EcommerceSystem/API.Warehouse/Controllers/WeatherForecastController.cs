@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebHooksAPI.Controllers
+namespace API.Warehouse.Controllers
 {
     [ApiController]
     [Route("[controller]")]
