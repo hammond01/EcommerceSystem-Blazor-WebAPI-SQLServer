@@ -66,6 +66,9 @@ class Program
         });
         //Add dependecy Injection
         builder.Services.AddScoped<IWarehouseServices, WareHouseRepository>();
+        builder.Services.AddScoped<IStockInboundServices, StockInboundRepository>();
+        builder.Services.AddScoped<IStockOutboundServices, StockOutboundRepository>();
+        builder.Services.AddScoped<IProductionBatchServices, ProductionBatchRepository>();
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
