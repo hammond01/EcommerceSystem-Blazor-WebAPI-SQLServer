@@ -1,0 +1,30 @@
+﻿@page "/warehouse"
+
+<h1>Warehouse manager</h1>
+<hr />
+@if (warehouses is null)
+{
+    <p><em>Loading....!</em></p>
+}
+else
+{
+    <table class="table table-striped table-hover table-responsive table-responsive-sm w-100">
+        <thead class="table-light">
+            <tr>
+                <th>Production Bath</th>
+                <th>Cost price</th>
+                <th>QuantityTotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in warehouses!)
+            {
+                <tr>
+                    <td>@data.ProductionBatchID</td>
+                    <td>@data.CostPrice</td>
+                    <td>@data.QuantityTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

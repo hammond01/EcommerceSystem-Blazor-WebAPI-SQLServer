@@ -1,4 +1,4 @@
-using Client;
+﻿using Client;
 using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,12 +13,11 @@ class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
         builder.Services.AddBlazorBootstrap();
-        builder.Services.AddScoped(sp =>
         httpClient = new HttpClient
         {
-            BaseAddress = new Uri("https://localhost:7297/api/")
-        }
-        );
+            BaseAddress = new Uri("https://localhost:7275/api/")
+        };
+
 
         builder.Services.AddScoped(sp =>
         new HttpClient
@@ -30,6 +29,7 @@ class Program
         builder.Services.AddScoped<ProductServices>();
         builder.Services.AddScoped<CategoryServices>();
         builder.Services.AddScoped<SuppliersServices>();
+        builder.Services.AddScoped<WarehouseServices>();
         builder.Services.AddScoped<SweetAlertService>();
         builder.Services.AddBlazorBootstrap();
         builder.Services.AddSweetAlert2();
