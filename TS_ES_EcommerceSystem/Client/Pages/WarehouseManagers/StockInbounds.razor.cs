@@ -2,14 +2,16 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Models;
+using Models.WarehouseModel;
 
 namespace Client.Pages.WarehouseManagers
 {
-    public partial class StockInbound
+    public partial class StockInbounds
     {
         private List<Products>? products;
         private List<Categories>? categories;
         private List<Suppliers>? suppliers;
+        private List<StockInbound>? stockInbounds;
         private int currentPage = 1;
         private int pageSize = 10;
         private string searchTerm = "";
@@ -18,6 +20,8 @@ namespace Client.Pages.WarehouseManagers
         [SupplyParameterFromForm]
         Products? productModel { get; set; }
 
+        [Inject]
+        protected StockServices stockServices { get; set; } = default!;
         [Inject]
         protected ProductServices productServices { get; set; } = default!;
         [Inject]
@@ -150,7 +154,16 @@ namespace Client.Pages.WarehouseManagers
         protected async Task LoadProducts(int page, int pageSize, string searchTerm)
         {
             (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
+            protected async Task LoadProducts(int page, int pageSize, string searchTerm)
+            {
+                (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
+            }
         }
+        protected async Task LoadInbounds()
+        {
+            stockInbounds = await stockServices.GetStockInbounds();
+        }
+
 
         protected async Task LoadCategories()
         {

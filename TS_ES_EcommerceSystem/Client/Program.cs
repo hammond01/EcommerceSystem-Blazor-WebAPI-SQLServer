@@ -3,6 +3,7 @@ using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Models.WarehouseModel;
 
 class Program
 {
@@ -30,6 +31,8 @@ class Program
         builder.Services.AddScoped<CategoryServices>();
         builder.Services.AddScoped<SuppliersServices>();
         builder.Services.AddScoped<WarehouseServices>();
+        builder.Services.AddScoped<ProductionBatchServices>();
+        builder.Services.AddScoped<StockServices>();
         builder.Services.AddScoped<SweetAlertService>();
         builder.Services.AddBlazorBootstrap();
         builder.Services.AddSweetAlert2();
