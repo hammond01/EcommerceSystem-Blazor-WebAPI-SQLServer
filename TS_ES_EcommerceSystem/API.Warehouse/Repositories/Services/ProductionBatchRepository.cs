@@ -86,7 +86,7 @@ namespace API.Warehouse.Repositories.Services
                 var query = @"UPDATE ProductionBatch SET 
                                 ProductID = @ProductID, 
                                 Quantity = @Quantity, 
-                                ManufactureDate = @ManufactureDate 
+                                ManufactureDate = @ManufactureDate, 
                                 ExpiryDate = @ExpiryDate 
                                     WHERE ProductionBatchID = @ProductionBatchID;";
                 productionBatch.ProductionBatchID = id;
