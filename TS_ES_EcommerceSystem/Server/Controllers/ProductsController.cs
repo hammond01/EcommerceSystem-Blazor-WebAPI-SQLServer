@@ -26,6 +26,25 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to get products");
+
+                var res = await _repo.GetAllProducts();
+
+                _logger.LogInformation($"Successfully retrieved products");
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting products: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetProduct(int id)
         {

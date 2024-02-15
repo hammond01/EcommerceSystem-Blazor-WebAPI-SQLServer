@@ -175,5 +175,38 @@ namespace Server.Repositories.Services
                 throw;
             }
         }
+
+        public async Task<object> GetAllProducts()
+        {
+            try
+            {
+
+                var query = @"SELECT p.*, c.*, s.*
+                      FROM Products p
+                      LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+                      LEFT JOIN Suppliers s ON p.SupplierID = s.SupplierID
+                      ORDER BY p.ProductID;";
+                var res = await Program.Sql.QueryAsync<Products, Categories, Suppliers, Products>(
+                    query,
+                    (product, category, supplier) =>
+                    {
+                        product.Categories = category;
+                        product.Suppliers = supplier;
+                        return product;
+                    },
+                    splitOn: "CategoryID, SupplierID"
+                );
+
+                return new
+                {
+                    data = res.AsList(),
+                    status = 200
+                };
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

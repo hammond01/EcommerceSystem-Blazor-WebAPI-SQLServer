@@ -11,7 +11,7 @@ namespace ServerLibrary.Repositories.Services
         {
             try
             {
-                var query = @"SELECT CategoryID, CategoryName, Description, Picture FROM Categories WHERE CategoryID = @id;";
+                var query = @"SELECT CategoryID, CategoryName, Description FROM Categories WHERE CategoryID = @id;";
                 var res = await Program.Sql.QuerySingleAsync<Categories>(query, new { id });
                 return new
                 {
@@ -30,7 +30,7 @@ namespace ServerLibrary.Repositories.Services
         {
             try
             {
-                var query = @"SELECT CategoryID, CategoryName, Description, Picture FROM Categories";
+                var query = @"SELECT CategoryID, CategoryName, Description FROM Categories";
                 var res = (await Program.Sql.QueryAsync<Categories>(query)).AsList();
                 return new
                 {
@@ -48,7 +48,7 @@ namespace ServerLibrary.Repositories.Services
         {
             try
             {
-                var query = @"UPDATE Categories SET CategoryName = @CategoryName, Description = @Description, Picture = @Picture WHERE CategoryID = @CategoryID;";
+                var query = @"UPDATE Categories SET CategoryName = @CategoryName, Description = @Description WHERE CategoryID = @CategoryID;";
                 category.CategoryID = id;
                 await Program.Sql.ExecuteAsync(query, category);
                 return new
@@ -67,7 +67,7 @@ namespace ServerLibrary.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("Categories", "CategoryID", "CategoryName", "Description", "Picture");
+                var query = Extension.GetInsertQuery("Categories", "CategoryID", "CategoryName", "Description");
                 var data = await Program.Sql.QuerySingleAsync<Categories>(query, category);
                 category.CategoryID = data.CategoryID;
                 return new
