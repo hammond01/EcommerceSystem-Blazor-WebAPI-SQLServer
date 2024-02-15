@@ -1,6 +1,8 @@
 ﻿using API.Warehouse.Repositories.Interfaces;
 using Dapper;
 using Heplers;
+using Models;
+using Models.ResponseModel;
 using Models.WarehouseModel;
 
 namespace API.Warehouse.Repositories.Services
@@ -11,7 +13,7 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchID", "ProductID", "Quantity", "ManufactureDate", "ExpiryDate");
+                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchName", "ProductID", "Quantity", "ManufactureDate", "ExpiryDate");
                 var data = await Program.Sql.QuerySingleAsync<ProductionBatch>(query, productionBatch);
                 productionBatch.ProductionBatchID = data.ProductionBatchID;
                 return new
@@ -26,11 +28,11 @@ namespace API.Warehouse.Repositories.Services
             }
         }
 
-        public async Task<object> DeleteProductionBatch(string id)
+        public async Task<object> DeleteProductionBatch(int id)
         {
             try
             {
-                var query = Extension.GetDeleteQueryString("ProductionBatch", "ProductionBatchID", id);
+                var query = Extension.GetDeleteQueryInt("ProductionBatch", "ProductionBatchID", id);
                 await Program.Sql.ExecuteAsync(query);
                 return new
                 {
@@ -43,12 +45,23 @@ namespace API.Warehouse.Repositories.Services
             }
         }
 
-        public async Task<object> GetProductionBatch(string id)
+        public async Task<object> GetProductionBatch(int id)
         {
             try
             {
-                var query = @"SELECT * FROM ProductionBatch WHERE ProductionBatchID = @id;";
-                var res = await Program.Sql.QuerySingleAsync<ProductionBatch>(query, new { id });
+                var query = @"SELECT * FROM ProductionBatch pb LEFT JOIN Products p ON pb.ProductID = p.ProductID WHERE ProductionBatchID = @id;";
+                var res = await Program.Sql.QueryAsync<ResProductionBatch, Products, ResProductionBatch>(
+                    query,
+                    (productionBatch, product) =>
+                    {
+                        productionBatch.Products = product;
+                        return productionBatch;
+                    },
+                    new { id },
+
+                    splitOn: "ProductID"
+                );
+
                 return new
                 {
                     data = res,
@@ -65,11 +78,20 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM ProductionBatch";
-                var res = (await Program.Sql.QueryAsync<ProductionBatch>(query)).AsList();
+                var query = @"SELECT * FROM ProductionBatch pb LEFT JOIN Products p ON pb.ProductID = p.ProductID";
+                var res = await Program.Sql.QueryAsync<ResProductionBatch, Products, ResProductionBatch>(
+                    query,
+                    (productionBatch, product) =>
+                    {
+                        productionBatch.Products = product;
+                        return productionBatch;
+                    },
+                    splitOn: "ProductID"
+                );
+
                 return new
                 {
-                    data = res,
+                    data = res.AsList(),
                     status = 200
                 };
             }
@@ -79,12 +101,13 @@ namespace API.Warehouse.Repositories.Services
             }
         }
 
-        public async Task<object> UpdateProductionBatch(string id, ProductionBatch productionBatch)
+        public async Task<object> UpdateProductionBatch(int id, ProductionBatch productionBatch)
         {
             try
             {
                 var query = @"UPDATE ProductionBatch SET 
-                                ProductID = @ProductID, 
+                                ProductID = @ProductID,                                 
+                                ProductionBatchName = @ProductionBatchName, 
                                 Quantity = @Quantity, 
                                 ManufactureDate = @ManufactureDate, 
                                 ExpiryDate = @ExpiryDate 

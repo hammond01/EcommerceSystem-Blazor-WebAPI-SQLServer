@@ -31,7 +31,7 @@ namespace API.Warehouse.Controllers
 
         }
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetWarehouse(string id)
+        public async Task<IActionResult> GetProductionBatch(int id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace API.Warehouse.Controllers
             }
         }
         [HttpPost("Add")]
-        public async Task<IActionResult> AddWarehouse(ProductionBatch productionBatch)
+        public async Task<IActionResult> AddProductionBatch(ProductionBatch productionBatch)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace API.Warehouse.Controllers
         }
         [HttpPut("Update/{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateWarehouse(string id, ProductionBatch productionBatch)
+        public async Task<IActionResult> UpdateProductionBatch(int id, ProductionBatch productionBatch)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace API.Warehouse.Controllers
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> DeleteWarehouse(string id)
+        public async Task<IActionResult> DeleteProductionBatch(int id)
         {
             try
             {
