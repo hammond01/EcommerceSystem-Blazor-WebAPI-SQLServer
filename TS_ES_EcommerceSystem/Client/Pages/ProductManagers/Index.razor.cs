@@ -49,7 +49,7 @@ namespace Client.Pages.ProductManagers
                     UnitPrice = productModel.UnitPrice,
                     UnitsInStock = productModel.UnitsInStock,
                     UnitsOnOrder = 0,
-                    ReorderLevel = productModel.ReorderLevel,
+                    ReorderLevel = 0,
                     Discontinued = true,
                 };
                 var res = await productServices.CreateProduct(data);

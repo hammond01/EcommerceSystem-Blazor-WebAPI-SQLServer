@@ -2,78 +2,79 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Models;
+using Models.ElasticsearchModel;
+using Models.ResponseModel;
 using Models.WarehouseModel;
+using System.Data.SqlTypes;
 
 namespace Client.Pages.WarehouseManagers
 {
     public partial class ProductionBatchs
     {
-        private List<Products>? products;
-        private List<Categories>? categories;
-        private List<Suppliers>? suppliers;
-        private List<StockInbound>? stockInbounds;
-        private List<ProductionBatch>? productionBatches;
-        private int currentPage = 1;
-        private int pageSize = 10;
-        private string searchTerm = "";
-        private int totalPage;
+        #region Variable
+        private string ErrorMessage { get; set; } = default!;
+        private bool IsButtonDisabled = true;
+        private bool addProductionBatch = false;
+        private string CheckManufactureDate { get; set; } = default!;
+        private string CheckExpiryDate { get; set; } = default!;
+        #endregion
 
-        [SupplyParameterFromForm]
-        Products? productModel { get; set; }
+        #region ListData
+        private List<ResProductionBatch> productionBatches { get; set; } = default!;
+        private List<Products>? products { get; set; } = default!;
+        #endregion
 
-        [Inject]
-        protected StockServices stockServices { get; set; } = default!;
+        #region Inject
         [Inject]
         protected ProductServices productServices { get; set; } = default!;
         [Inject]
-        protected CategoryServices categoryServices { get; set; } = default!;
-        [Inject]
-        protected SuppliersServices suppliersServices { get; set; } = default!;
+        protected ProductionBatchServices productionBatchServices { get; set; } = default!;
         [Inject]
         protected SweetAlertService Swal { get; set; } = default!;
+        #endregion
 
+        [SupplyParameterFromForm]
+        ResProductionBatch? productionBatchModel { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            productModel ??= new();
-            await LoadProducts(currentPage, pageSize, searchTerm);
-            await LoadCategories();
-            await LoadSuppliers();
+            productionBatchModel ??= new ResProductionBatch();
+            productionBatchModel.ExpiryDate = DateTime.Now;
+            productionBatchModel.ManufactureDate = DateTime.Now;
+            await GetProductBatchs();
         }
-        protected async Task CreateProduct()
+
+        #region Create or Edit
+        protected async Task CreateProductionBatch()
         {
 
-            if (productModel!.ProductID == 0)
+            if (productionBatchModel!.ProductionBatchID == 0)
             {
                 //create new product
-                var data = new Products
+                var data = new ProductionBatch
                 {
-                    ProductName = productModel!.ProductName,
-                    CategoryID = productModel.CategoryID,
-                    SupplierID = productModel.SupplierID,
-                    QuantityPerUnit = productModel.QuantityPerUnit,
-                    UnitPrice = productModel.UnitPrice,
-                    UnitsInStock = productModel.UnitsInStock,
-                    UnitsOnOrder = 0,
-                    ReorderLevel = productModel.ReorderLevel,
-                    Discontinued = true,
+                    ProductionBatchName = productionBatchModel.ProductionBatchName,
+                    ProductID = productionBatchModel.ProductID,
+                    Quantity = productionBatchModel.Quantity,
+                    ManufactureDate = productionBatchModel.ManufactureDate,
+                    ExpiryDate = productionBatchModel.ExpiryDate,
                 };
-                var res = await productServices.CreateProduct(data);
+                var res = await productionBatchServices.CreateProductionBatch(data);
 
                 if (res == "Created")
                 {
                     await Swal.FireAsync(
                      "Create",
-                     "Create product success!",
+                     "Created!",
                      SweetAlertIcon.Success
                      );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
+                    await GetProductBatchs();
 
                 }
                 else
                 {
                     await Swal.FireAsync(
                      "Cancelled",
-                     "Create product is safe :)",
+                     "Create is safe :)",
                      SweetAlertIcon.Error
                      );
                 }
@@ -81,21 +82,21 @@ namespace Client.Pages.WarehouseManagers
             else
             {
                 // Update product
-                var update = await productServices.UpdateProduct(productModel);
+                var update = await productionBatchServices.UpdateProductionBatch(productionBatchModel);
                 if (update == true)
                 {
                     await Swal.FireAsync(
                                             "Updated",
-                                            "Product has been Updated.",
+                                            "Updated.",
                                              SweetAlertIcon.Success
                                         );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
+                    await GetProductBatchs();
                 }
                 else
                 {
                     await Swal.FireAsync(
                                             "Error",
-                                            "Product hasn't been Updated.",
+                                            "Error",
                                             SweetAlertIcon.Error
                                         );
                 }
@@ -126,7 +127,6 @@ namespace Client.Pages.WarehouseManagers
                                              "Product has been deleted.",
                                              SweetAlertIcon.Success
                                         );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
                 }
                 else
                 {
@@ -146,52 +146,66 @@ namespace Client.Pages.WarehouseManagers
                                     );
             }
         }
-        protected async Task EditProduct(int productID)
+        #endregion
+
+        #region Get endpoint
+        protected async Task GetProductBatchByProductionBatchID(int id)
         {
-            productModel = await productServices.GetProductById(productID);
+            productionBatchModel = await productionBatchServices.GetProductionBatchById(id);
         }
 
-
-        protected async Task LoadProducts(int page, int pageSize, string searchTerm)
+        protected async Task GetProductBatchs()
         {
-            (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
-            protected async Task LoadProducts(int page, int pageSize, string searchTerm)
+            productionBatches = await productionBatchServices.GetProductionBatchs();
+            products = await productServices.GetProductsInProductionBatch();
+        }
+        private void GetProducts()
+        {
+            addProductionBatch = true;
+        }
+        #endregion
+
+        #region Validate
+        private void ValidateInput(ChangeEventArgs e)
+        {
+            string input = e.Value!.ToString()!;
+            if (input.Length != 4)
             {
-                (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
+                IsButtonDisabled = true;
+                ErrorMessage = "Product batch name must be 4 characters long.";
+            }
+            else
+            {
+                IsButtonDisabled = false;
+                ErrorMessage = "";
             }
         }
-        protected async Task LoadInbounds()
+        private void HandleManufactureDateChange(ChangeEventArgs e)
         {
-            stockInbounds = await stockServices.GetStockInbounds();
-        }
-
-
-        protected async Task LoadCategories()
-        {
-            categories = await categoryServices.GetCategories();
-        }
-        protected async Task LoadSuppliers()
-        {
-            suppliers = await suppliersServices.GetSuppliers();
-        }
-
-        protected async Task Search()
-        {
-            currentPage = 1;
-            await Task.Delay(300);
-            await LoadProducts(currentPage, pageSize, searchTerm);
-        }
-        private async Task OnPageChangedAsync(int newPageNumber)
-        {
-            await Task.Run(() =>
+            if (!DateTime.TryParse(e.Value!.ToString(), out DateTime selectedDate) ||
+                selectedDate < SqlDateTime.MinValue.Value || selectedDate > SqlDateTime.MaxValue.Value)
             {
-                currentPage = newPageNumber;
-
-            });
-
-            await LoadProducts(currentPage, pageSize, searchTerm);
-
+                CheckManufactureDate = "Invalid date. Please select a date within the valid range.";
+            }
+            else
+            {
+                productionBatchModel!.ManufactureDate = selectedDate;
+                CheckManufactureDate = "";
+            }
         }
-
+        private void HandleExpiryDateChange(ChangeEventArgs e)
+        {
+            if (!DateTime.TryParse(e.Value!.ToString(), out DateTime selectedDate) ||
+                selectedDate < SqlDateTime.MinValue.Value || selectedDate > SqlDateTime.MaxValue.Value)
+            {
+                CheckExpiryDate = "Invalid date. Please select a date within the valid range.";
+            }
+            else
+            {
+                productionBatchModel!.ExpiryDate = selectedDate;
+                CheckExpiryDate = "";
+            }
+        }
+        #endregion
     }
 }

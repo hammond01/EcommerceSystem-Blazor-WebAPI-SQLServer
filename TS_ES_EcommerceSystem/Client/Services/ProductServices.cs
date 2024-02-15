@@ -37,6 +37,25 @@ namespace Client.Services
 
             return (new List<Products>(), 0);
         }
+        public async Task<List<Products>> GetProductsInProductionBatch()
+        {
+            var request = await _client.GetAsync($"v1/Products/get-all");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    var r = json.GetProperty("data").GetObject<List<Products>>();
+
+                    return r;
+                }
+            }
+
+            return new List<Products>();
+        }
         public async Task<string> CreateProduct(Products product)
         {
             var content = new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8, "application/json");

@@ -154,10 +154,7 @@ namespace Client.Pages.WarehouseManagers
         protected async Task LoadProducts(int page, int pageSize, string searchTerm)
         {
             (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
-            protected async Task LoadProducts(int page, int pageSize, string searchTerm)
-            {
-                (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
-            }
+
         }
         protected async Task LoadInbounds()
         {

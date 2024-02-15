@@ -4,14 +4,15 @@ using System.Text.Json;
 using System.Text;
 using Client.Helpers;
 using Models.WarehouseModel;
+using Models.ResponseModel;
 
 namespace Client.Services
 {
-    public class ProductionBatchionBatchServices
+    public class ProductionBatchServices
     {
-        public async Task<List<ProductionBatch>> GetProductionBatchs()
+        public async Task<List<ResProductionBatch>> GetProductionBatchs()
         {
-            var request = await Program.httpClient.GetAsync($"ProductionBatchionBatchs/gets");
+            var request = await Program.httpClient.GetAsync($"ProductionBatchs/gets");
 
             if (request.IsSuccessStatusCode)
             {
@@ -20,13 +21,13 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    var r = json.GetProperty("data").GetObject<List<ProductionBatch>>();
+                    var r = json.GetProperty("data").GetObject<List<ResProductionBatch>>();
 
                     return r;
                 }
             }
 
-            return new List<ProductionBatch>();
+            return new List<ResProductionBatch>();
         }
         public async Task<string> CreateProductionBatch(ProductionBatch productionBatch)
         {
@@ -68,7 +69,7 @@ namespace Client.Services
             return "Deletion failed";
         }
 
-        public async Task<ProductionBatch> GetProductionBatchById(int productId)
+        public async Task<ResProductionBatch> GetProductionBatchById(int productId)
         {
             // Assuming you have an API endpoint for getting a product by ID
             var request = await Program.httpClient.GetAsync($"ProductionBatchs/get/{productId}");
@@ -80,15 +81,15 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    var r = json.GetProperty("data").GetObject<ProductionBatch>();
+                    var r = json.GetProperty("data").GetObject<ResProductionBatch>();
                     return r;
                 }
             }
 
             // Handle failure or other scenarios
-            return new ProductionBatch();
+            return new ResProductionBatch();
         }
-        public async Task<bool> UpdateProductionBatch(ProductionBatch updatedProductionBatch)
+        public async Task<bool> UpdateProductionBatch(ResProductionBatch updatedProductionBatch)
         {
             var content = new StringContent(JsonConvert.SerializeObject(updatedProductionBatch), Encoding.UTF8, "application/json");
 

@@ -3,7 +3,6 @@ using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Models.WarehouseModel;
 
 class Program
 {
