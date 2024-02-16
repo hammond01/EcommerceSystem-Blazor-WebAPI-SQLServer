@@ -69,7 +69,7 @@ namespace API.Warehouse.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateProductionBatch(int id, ProductionBatch productionBatch)
         {
             try
@@ -90,7 +90,7 @@ namespace API.Warehouse.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteProductionBatch(int id)
         {
             try

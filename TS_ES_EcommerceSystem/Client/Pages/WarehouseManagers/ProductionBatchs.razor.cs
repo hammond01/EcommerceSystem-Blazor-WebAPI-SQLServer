@@ -2,7 +2,6 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Models;
-using Models.ElasticsearchModel;
 using Models.ResponseModel;
 using Models.WarehouseModel;
 using System.Data.SqlTypes;
@@ -43,7 +42,7 @@ namespace Client.Pages.WarehouseManagers
             await GetProductBatchs();
         }
 
-        #region Create or Edit
+        #region Create, Edit and Delete
         protected async Task CreateProductionBatch()
         {
 
@@ -103,7 +102,7 @@ namespace Client.Pages.WarehouseManagers
             }
 
         }
-        protected async Task DeleteProduct(int id)
+        protected async Task DeleteProductbatch(int id)
         {
             SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
             {
@@ -117,7 +116,7 @@ namespace Client.Pages.WarehouseManagers
 
             if (!string.IsNullOrEmpty(result.Value))
             {
-                var res = await productServices.DeleteProduct(id);
+                var res = await productionBatchServices.DeleteProductionBatch(id);
 
 
                 if (res == "Deleted")
@@ -127,6 +126,7 @@ namespace Client.Pages.WarehouseManagers
                                              "Product has been deleted.",
                                              SweetAlertIcon.Success
                                         );
+                    await GetProductBatchs();
                 }
                 else
                 {
@@ -152,6 +152,7 @@ namespace Client.Pages.WarehouseManagers
         protected async Task GetProductBatchByProductionBatchID(int id)
         {
             productionBatchModel = await productionBatchServices.GetProductionBatchById(id);
+            IsButtonDisabled = false;
         }
 
         protected async Task GetProductBatchs()
@@ -186,26 +187,42 @@ namespace Client.Pages.WarehouseManagers
                 selectedDate < SqlDateTime.MinValue.Value || selectedDate > SqlDateTime.MaxValue.Value)
             {
                 CheckManufactureDate = "Invalid date. Please select a date within the valid range.";
+                IsButtonDisabled = true;
+            }
+            else if (selectedDate > productionBatchModel!.ExpiryDate)
+            {
+                CheckManufactureDate = "Manufacture date cannot be greater than expiry date.";
+                IsButtonDisabled = true;
             }
             else
             {
                 productionBatchModel!.ManufactureDate = selectedDate;
                 CheckManufactureDate = "";
+                IsButtonDisabled = false;
             }
         }
+
         private void HandleExpiryDateChange(ChangeEventArgs e)
         {
             if (!DateTime.TryParse(e.Value!.ToString(), out DateTime selectedDate) ||
                 selectedDate < SqlDateTime.MinValue.Value || selectedDate > SqlDateTime.MaxValue.Value)
             {
                 CheckExpiryDate = "Invalid date. Please select a date within the valid range.";
+                IsButtonDisabled = true;
+            }
+            else if (selectedDate < productionBatchModel!.ManufactureDate)
+            {
+                CheckExpiryDate = "Expiry date cannot be less than manufacture date.";
+                IsButtonDisabled = true;
             }
             else
             {
                 productionBatchModel!.ExpiryDate = selectedDate;
                 CheckExpiryDate = "";
+                IsButtonDisabled = false;
             }
         }
+
         #endregion
     }
 }

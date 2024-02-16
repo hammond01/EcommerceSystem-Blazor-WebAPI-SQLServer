@@ -48,10 +48,10 @@ namespace Client.Services
             }
             return "";
         }
-        public async Task<string> DeleteProductionBatch(int productId)
+        public async Task<string> DeleteProductionBatch(int id)
         {
             // Assuming you have an API endpoint for deleting a product
-            var request = await Program.httpClient.DeleteAsync($"ProductionBatchs/Delete/{productId}");
+            var request = await Program.httpClient.DeleteAsync($"ProductionBatchs/Delete/{id}");
 
             if (request.IsSuccessStatusCode)
             {
@@ -69,10 +69,10 @@ namespace Client.Services
             return "Deletion failed";
         }
 
-        public async Task<ResProductionBatch> GetProductionBatchById(int productId)
+        public async Task<ResProductionBatch> GetProductionBatchById(int id)
         {
             // Assuming you have an API endpoint for getting a product by ID
-            var request = await Program.httpClient.GetAsync($"ProductionBatchs/get/{productId}");
+            var request = await Program.httpClient.GetAsync($"ProductionBatchs/get/{id}");
 
             if (request.IsSuccessStatusCode)
             {
@@ -81,7 +81,7 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    var r = json.GetProperty("data").GetObject<ResProductionBatch>();
+                    var r = json.GetProperty("data")[0].GetObject<ResProductionBatch>();
                     return r;
                 }
             }

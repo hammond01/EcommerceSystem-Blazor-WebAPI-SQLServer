@@ -10,21 +10,80 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link p-2" style="cursor:pointer;" href="">
+                <div class="hstack gap-1">
+                    <span class="bi bi-house-door-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                    <span>Home</span>
+                </div>
             </NavLink>
-            <NavLink class="nav-link" href="Warehouse" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Warehouse
+            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerWarehouse" style="cursor:pointer;" href="javascript:void()">
+                <div class="hstack gap-1">
+                    @if (ShowWarehouse)
+                    {
+                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                    }
+                    else
+                    {
+                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                    }
+                    <span>Warehouse Manager</span>
+                </div>
             </NavLink>
-            <NavLink class="nav-link" href="StockInbound" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> StockInbound
+            @if (ShowWarehouse)
+            {
+                <a class="nav-link text-white" href="warehouse" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Warehouse</span>
+                    </div>
+                </a>
+                <a class="nav-link text-white" href="productionBatch" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Product batch</span>
+                    </div>
+                </a>
+                <a class="nav-link text-white" href="stockInbound" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Stock in bound</span>
+                    </div>
+                </a>
+                <a class="nav-link text-white" href="stockOutbound" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Stock out bound</span>
+                    </div>
+                </a>
+            }
+            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerProduct" style="cursor:pointer;" href="javascript:void()">
+                <div class="hstack gap-1">
+                    @if (ShowProduct)
+                    {
+                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                    }
+                    else
+                    {
+                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                    }
+                    <span>Product Manager</span>
+                </div>
             </NavLink>
-            <NavLink class="nav-link" href="StockOutbound" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> StockOutbound
-            </NavLink>
-            <NavLink class="nav-link" href="ProductionBatch" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> ProductionBatch
-            </NavLink>
+            @if (ShowProduct)
+            {
+                <a class="nav-link text-white" href="productionBatch" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Product</span>
+                    </div>
+                </a>
+                <a class="nav-link text-white" href="productionBatch" style="margin-left:5rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span>Category</span>
+                    </div>
+                </a>
+            }
         </div>
     </nav>
 </div>
@@ -33,9 +92,18 @@
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    public bool ShowWarehouse { get; set; } = false;
+    public bool ShowProduct { get; set; } = false;
+    private void ShowMenuContainerWarehouse()
+    {
+        ShowWarehouse = !ShowWarehouse;
+    }
+    private void ShowMenuContainerProduct()
+    {
+        ShowProduct = !ShowProduct;
     }
 }
