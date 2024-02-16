@@ -1,6 +1,8 @@
 ﻿using API.Warehouse.Repositories.Interfaces;
 using Dapper;
 using Heplers;
+using Models.ResponseModel;
+using Models;
 using Models.WarehouseModel;
 
 namespace API.Warehouse.Repositories.Services
@@ -47,8 +49,17 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM StockInbound WHERE InboundID = @id;";
-                var res = await Program.Sql.QuerySingleAsync<StockInbound>(query, new { id });
+                var query = @"SELECT * FROM StockInbound s LEFT JOIN ProductionBatch p ON s.ProductionBatchID = p.ProductionBatchID WHERE InboundID = @id;";
+                var res = await Program.Sql.QueryAsync<StockInBoundResponse, ProductionBatch, StockInBoundResponse>(
+                    query,
+                    (inbound, productBatch) =>
+                    {
+                        inbound.ProductionBatch = productBatch;
+                        return inbound;
+                    },
+                    new { id },
+                    splitOn: "ProductionBatchID"
+                );
                 return new
                 {
                     data = res,
@@ -65,11 +76,20 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM StockInbound";
-                var res = (await Program.Sql.QueryAsync<StockInbound>(query)).AsList();
+                var query = @"SELECT * FROM StockInbound s LEFT JOIN ProductionBatch p ON s.ProductionBatchID = p.ProductionBatchID ORDER BY s.InboundID DESC";
+                var res = await Program.Sql.QueryAsync<StockInBoundResponse, ProductionBatch, StockInBoundResponse>(
+                    query,
+                    (inbound, productBatch) =>
+                    {
+                        inbound.ProductionBatch = productBatch;
+                        return inbound;
+                    },
+                    splitOn: "ProductionBatchID"
+                );
+
                 return new
                 {
-                    data = res,
+                    data = res.AsList(),
                     status = 200
                 };
             }

@@ -2,77 +2,73 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Models;
+using Models.ResponseModel;
 using Models.WarehouseModel;
+using System.Data.SqlTypes;
 
 namespace Client.Pages.WarehouseManagers
 {
     public partial class StockInbounds
     {
-        private List<Products>? products;
-        private List<Categories>? categories;
-        private List<Suppliers>? suppliers;
-        private List<StockInbound>? stockInbounds;
-        private int currentPage = 1;
-        private int pageSize = 10;
-        private string searchTerm = "";
-        private int totalPage;
+        #region Variable
+        private bool addButton = false;
+        #endregion
 
-        [SupplyParameterFromForm]
-        Products? productModel { get; set; }
+        #region ListData
+        private List<ResProductionBatch> productionBatches { get; set; } = default!;
+        private List<StockInBoundResponse> stockInbounds { get; set; } = default!;
+        #endregion
 
+        #region Inject
         [Inject]
-        protected StockServices stockServices { get; set; } = default!;
+        protected StockInBoundServices stockInBoundServices { get; set; } = default!;
         [Inject]
-        protected ProductServices productServices { get; set; } = default!;
-        [Inject]
-        protected CategoryServices categoryServices { get; set; } = default!;
-        [Inject]
-        protected SuppliersServices suppliersServices { get; set; } = default!;
+        protected ProductionBatchServices productionBatchServices { get; set; } = default!;
         [Inject]
         protected SweetAlertService Swal { get; set; } = default!;
+        #endregion
 
+        [SupplyParameterFromForm]
+        StockInBoundResponse? stockInboundModel { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            productModel ??= new();
-            await LoadProducts(currentPage, pageSize, searchTerm);
-            await LoadCategories();
-            await LoadSuppliers();
+            stockInboundModel ??= new();
+            stockInboundModel.DateInbound = DateTime.Now;
+            await LoadData();
         }
-        protected async Task CreateProduct()
+
+        #region Create, Edit and Delete
+        protected async Task Create()
         {
 
-            if (productModel!.ProductID == 0)
+            if (stockInboundModel!.InboundID == 0)
             {
                 //create new product
-                var data = new Products
+                var data = new StockInbound
                 {
-                    ProductName = productModel!.ProductName,
-                    CategoryID = productModel.CategoryID,
-                    SupplierID = productModel.SupplierID,
-                    QuantityPerUnit = productModel.QuantityPerUnit,
-                    UnitPrice = productModel.UnitPrice,
-                    UnitsInStock = productModel.UnitsInStock,
-                    UnitsOnOrder = 0,
-                    ReorderLevel = productModel.ReorderLevel,
-                    Discontinued = true,
+                    DateInbound = DateTime.Now,
+                    ProductionBatchID = stockInboundModel.ProductionBatchID,
+                    QuantityInbound = stockInboundModel.QuantityInbound,
+                    Note = stockInboundModel.Note
+
                 };
-                var res = await productServices.CreateProduct(data);
+                var res = await stockInBoundServices.CreateStockInBound(data);
 
                 if (res == "Created")
                 {
                     await Swal.FireAsync(
                      "Create",
-                     "Create product success!",
+                     "Created!",
                      SweetAlertIcon.Success
                      );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
+                    await LoadData();
 
                 }
                 else
                 {
                     await Swal.FireAsync(
                      "Cancelled",
-                     "Create product is safe :)",
+                     "Create is safe :)",
                      SweetAlertIcon.Error
                      );
                 }
@@ -80,28 +76,28 @@ namespace Client.Pages.WarehouseManagers
             else
             {
                 // Update product
-                var update = await productServices.UpdateProduct(productModel);
+                var update = await stockInBoundServices.UpdateStockInbound(stockInboundModel);
                 if (update == true)
                 {
                     await Swal.FireAsync(
                                             "Updated",
-                                            "Product has been Updated.",
+                                            "Updated.",
                                              SweetAlertIcon.Success
                                         );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
+                    await LoadData();
                 }
                 else
                 {
                     await Swal.FireAsync(
                                             "Error",
-                                            "Product hasn't been Updated.",
+                                            "Error",
                                             SweetAlertIcon.Error
                                         );
                 }
             }
 
         }
-        protected async Task DeleteProduct(int id)
+        protected async Task Delete(int id)
         {
             SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
             {
@@ -115,7 +111,7 @@ namespace Client.Pages.WarehouseManagers
 
             if (!string.IsNullOrEmpty(result.Value))
             {
-                var res = await productServices.DeleteProduct(id);
+                var res = await stockInBoundServices.DeleteStockInbound(id);
 
 
                 if (res == "Deleted")
@@ -125,7 +121,7 @@ namespace Client.Pages.WarehouseManagers
                                              "Product has been deleted.",
                                              SweetAlertIcon.Success
                                         );
-                    await LoadProducts(currentPage, pageSize, searchTerm);
+                    await LoadData();
                 }
                 else
                 {
@@ -145,49 +141,29 @@ namespace Client.Pages.WarehouseManagers
                                     );
             }
         }
-        protected async Task EditProduct(int productID)
+        #endregion
+
+        #region Get endpoint
+        protected async Task LoadData()
         {
-            productModel = await productServices.GetProductById(productID);
+            productionBatches = await productionBatchServices.GetProductionBatchs();
+            stockInbounds = await stockInBoundServices.GetStockInbounds();
         }
-
-
-        protected async Task LoadProducts(int page, int pageSize, string searchTerm)
+        private void GetProducts()
         {
-            (products, totalPage) = await productServices.GetProducts(page, pageSize, searchTerm);
-
+            addButton = true;
         }
-        protected async Task LoadInbounds()
+        protected async Task GetStockInbound(int id)
         {
-            stockInbounds = await stockServices.GetStockInbounds();
+            stockInboundModel = await stockInBoundServices.GetStockInbound(id);
         }
+        #endregion
 
-
-        protected async Task LoadCategories()
+        #region Validate
+        #endregion
+        private void ClearData()
         {
-            categories = await categoryServices.GetCategories();
+            stockInboundModel = new();
         }
-        protected async Task LoadSuppliers()
-        {
-            suppliers = await suppliersServices.GetSuppliers();
-        }
-
-        protected async Task Search()
-        {
-            currentPage = 1;
-            await Task.Delay(300);
-            await LoadProducts(currentPage, pageSize, searchTerm);
-        }
-        private async Task OnPageChangedAsync(int newPageNumber)
-        {
-            await Task.Run(() =>
-            {
-                currentPage = newPageNumber;
-
-            });
-
-            await LoadProducts(currentPage, pageSize, searchTerm);
-
-        }
-
     }
 }
