@@ -3,6 +3,7 @@ using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Radzen;
 
 class Program
 {
@@ -35,6 +36,7 @@ class Program
         builder.Services.AddScoped<SweetAlertService>();
         builder.Services.AddBlazorBootstrap();
         builder.Services.AddSweetAlert2();
+        builder.Services.AddRadzenComponents();
         await builder.Build().RunAsync();
     }
 }

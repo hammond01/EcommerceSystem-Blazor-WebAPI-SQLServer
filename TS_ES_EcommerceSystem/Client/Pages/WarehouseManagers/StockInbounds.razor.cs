@@ -1,10 +1,10 @@
 ﻿using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
-using Models;
 using Models.ResponseModel;
 using Models.WarehouseModel;
-using System.Data.SqlTypes;
+using Radzen.Blazor;
+using Radzen;
 
 namespace Client.Pages.WarehouseManagers
 {
@@ -13,7 +13,6 @@ namespace Client.Pages.WarehouseManagers
         #region Variable
         private bool addButton = false;
         #endregion
-
         #region ListData
         private List<ResProductionBatch> productionBatches { get; set; } = default!;
         private List<StockInBoundResponse> stockInbounds { get; set; } = default!;
@@ -43,7 +42,6 @@ namespace Client.Pages.WarehouseManagers
 
             if (stockInboundModel!.InboundID == 0)
             {
-                //create new product
                 var data = new StockInbound
                 {
                     DateInbound = DateTime.Now,
@@ -75,7 +73,6 @@ namespace Client.Pages.WarehouseManagers
             }
             else
             {
-                // Update product
                 var update = await stockInBoundServices.UpdateStockInbound(stockInboundModel);
                 if (update == true)
                 {

@@ -5,7 +5,7 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="()=> GetProducts()" data-bs-target="#addModal">
     Add product to warehouse
 </button>
-<h1>Production batch manager</h1>
+<h1>Stock in warehouse</h1>
 <hr />
 @if (productionBatches is null || stockInbounds is null)
 {
@@ -13,39 +13,6 @@
 }
 else
 {
-    <table class="table table-striped table-hover table-responsive table-responsive-sm w-100">
-        <thead class="table-light">
-            <tr>
-                <th>Date inbound</th>
-                <th>Product batch name</th>
-                <th>Quantity per unit</th>
-                <th>Quantity inbound</th>
-                <th>Note</th>
-                <th class=" text-center">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var data in stockInbounds!)
-            {
-                <tr>
-                    <td>@data.DateInbound</td>
-                    <td>@data.ProductionBatch.ProductionBatchName</td>
-                    <td>@data.ProductionBatch.Quantity</td>
-                    <td style="max-width:200px;">@data.QuantityInbound</td>
-                    <td>@data.Note</td>
-                    <td class=" d-flex">
-                        <a class="w-50 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetStockInbound(data.InboundID)">
-                            <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
-                        </a>
-                        <a class="w-50 btn btn-danger mx-2 my-auto" @onclick="() => Delete(data.InboundID)">
-                            <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -57,7 +24,7 @@ else
                     <EditForm Model="@stockInboundModel" OnSubmit="@Create" FormName="Inbound">
                         <div class="input-group input-group-sm mb-3">
                             <label class="input-group-text" for="Product">Product batch</label>
-                            <select class="form-select" id="Product" @bind="@stockInboundModel.ProductionBatchID">
+                            <select class="form-select" id="Product" @bind="@stockInboundModel!.ProductionBatchID">
                                 <option selected>
                                     Choose...
                                 </option>
@@ -84,4 +51,25 @@ else
             </div>
         </div>
     </div>
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@stockInbounds.AsQueryable()" TItem="@StockInBoundResponse" ColumnWidth="300px" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
+        <Columns>
+            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch name"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="DateInbound" Title="DateInbound"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="QuantityInbound" Title="Quantity inbound"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="Note" Title="Note"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@StockInBoundResponse" Title="Actions" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetStockInbound(data.InboundID)">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
+                    </a>
+                    <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => Delete(data.InboundID)">
+                        <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
 }
