@@ -13,39 +13,27 @@
 }
 else
 {
-    <table class="table table-striped table-hover table-responsive table-responsive-sm w-100">
-        <thead class="table-light">
-            <tr>
-                <th>Product batchs</th>
-                <th>Product name</th>
-                <th>Quantity</th>
-                <th>Manufacture date</th>
-                <th>Expiry date</th>
-                <th class=" text-center">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var data in productionBatches!)
-            {
-                <tr>
-                    <td>@data.ProductionBatchName</td>
-                    <td>@data.Products!.ProductName</td>
-                    <td>@data.Quantity</td>
-                    <td style="max-width:200px">@data.ManufactureDate</td>
-                    <td>@data.ExpiryDate</td>
-                    <td class=" d-flex">
-                        <a class="w-50 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
-                            <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
-                        </a>
-                        <a class="w-50 btn btn-danger mx-2 my-auto" @onclick="() => DeleteProductbatch(data.ProductionBatchID)">
-                            <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@productionBatches.AsQueryable()" TItem="@ResProductionBatch" ColumnWidth="150px" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
+        <Columns>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ProductionBatch.ProductionBatchName" Title="Product batch name" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="Products.ProductName" Title="Product Name"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="Quantity" Title="Quantity" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ManufactureDate" Title="Manufacture date"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ExpiryDate" Title="Expiry date"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ResProductionBatch" Title="Actions" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
+                    </a>
+                    <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => DeleteProductbatch(data.ProductionBatchID)">
+                        <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">

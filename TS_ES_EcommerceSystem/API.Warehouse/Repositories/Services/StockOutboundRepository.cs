@@ -1,6 +1,7 @@
 ﻿using API.Warehouse.Repositories.Interfaces;
 using Dapper;
 using Heplers;
+using Models.ResponseModel;
 using Models.WarehouseModel;
 
 namespace API.Warehouse.Repositories.Services
@@ -47,8 +48,17 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM StockOutbound WHERE OutboundID = @id;";
-                var res = await Program.Sql.QuerySingleAsync<StockOutbound>(query, new { id });
+                var query = @"SELECT * FROM StockOutbound s LEFT JOIN ProductionBatch p ON s.ProductionBatchID = p.ProductionBatchID WHERE OutboundID = @id;";
+                var res = await Program.Sql.QueryAsync<StockOutBoundResponse, ProductionBatch, StockOutBoundResponse>(
+                    query,
+                    (outbound, productBatch) =>
+                    {
+                        outbound.ProductionBatch = productBatch;
+                        return outbound;
+                    },
+                    new { id },
+                    splitOn: "ProductionBatchID"
+                );
                 return new
                 {
                     data = res,
@@ -65,11 +75,20 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM StockOutbound";
-                var res = (await Program.Sql.QueryAsync<StockOutbound>(query)).AsList();
+                var query = @"SELECT * FROM StockOutbound s LEFT JOIN ProductionBatch p ON s.ProductionBatchID = p.ProductionBatchID ORDER BY s.OutboundID DESC";
+                var res = await Program.Sql.QueryAsync<StockOutBoundResponse, ProductionBatch, StockOutBoundResponse>(
+                    query,
+                    (outbound, productBatch) =>
+                    {
+                        outbound.ProductionBatch = productBatch;
+                        return outbound;
+                    },
+                    splitOn: "ProductionBatchID"
+                );
+
                 return new
                 {
-                    data = res,
+                    data = res.AsList(),
                     status = 200
                 };
             }
