@@ -14,15 +14,15 @@
 else
 {
     <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@productionBatches.AsQueryable()" TItem="@ResProductionBatch" ColumnWidth="150px" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                    Data="@productionBatches.AsQueryable()" TItem="@ProductBathResponse" ColumnWidth="150px" AllowFiltering="true" FilterMode="FilterMode.Simple"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
         <Columns>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ProductionBatch.ProductionBatchName" Title="Product batch name" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="Products.ProductName" Title="Product Name"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="Quantity" Title="Quantity" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ManufactureDate" Title="Manufacture date"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Property="ExpiryDate" Title="Expiry date"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ResProductionBatch" Title="Actions" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch name" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Products.ProductName" Title="Product Name"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Quantity" Title="Quantity" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ManufactureDate" Title="Manufacture date"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ExpiryDate" Title="Expiry date"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Title="Actions" TextAlign="TextAlign.Center">
                 <Template Context="data">
                     <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
                         <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
@@ -44,22 +44,26 @@ else
                 <div class="modal-body">
                     <EditForm Model="@productionBatchModel" OnSubmit="@CreateProductionBatch" FormName="ProductionBatch">
                         <div class="input-group input-group-sm mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Product batch name</span>
-                            <input @bind="@productionBatchModel!.ProductionBatchName" type="text" class="form-control" @oninput="ValidateInput">
-                        </div>
-                        @if (!string.IsNullOrEmpty(ErrorMessage))
-                        {
-                            <div class="alert alert-danger">@ErrorMessage</div>
-                        }
-                        <div class="input-group input-group-sm mb-3">
                             <label class="input-group-text" for="Product">Product</label>
-                            <select class="form-select" id="Product" @bind="@productionBatchModel.ProductID">
+                            <select class="form-select" id="Product" @bind="@productionBatchModel!.ProductID">
                                 <option selected>
                                     Choose...
                                 </option>
                                 @foreach (var data in products!)
                                 {
                                     <option value="@data.ProductID">@data.ProductName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <label class="input-group-text" for="Product">Product</label>
+                            <select class="form-select" id="Product" @bind="@productionBatchModel!.UnitID">
+                                <option selected>
+                                    Choose...
+                                </option>
+                                @foreach (var data in units!)
+                                {
+                                    <option value="@data.UnitID">@data.UnitName</option>
                                 }
                             </select>
                         </div>
@@ -85,8 +89,8 @@ else
                         }
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit" disabled="@IsButtonDisabled">@(addProductionBatch == true ? "Create new" : "Edit") product batch</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Close</button>
+                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit" disabled="@IsButtonDisabled">Save</button>
                         </div>
                     </EditForm>
                 </div>

@@ -14,7 +14,7 @@ namespace Client.Pages.WarehouseManagers
         private bool addButton = false;
         #endregion
         #region ListData
-        private List<ResProductionBatch> productionBatches { get; set; } = default!;
+        private List<ProductBathResponse> productionBatches { get; set; } = default!;
         private List<StockInBoundResponse> stockInbounds { get; set; } = default!;
         #endregion
 

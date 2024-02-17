@@ -5,7 +5,7 @@ using Models;
 
 namespace Client.Pages.ProductManagers
 {
-    public partial class Index
+    public partial class Products
     {
         private List<Models.Products>? products;
         private List<Categories>? categories;

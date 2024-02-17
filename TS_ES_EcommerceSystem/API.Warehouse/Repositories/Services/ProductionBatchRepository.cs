@@ -13,7 +13,15 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchName", "ProductID", "Quantity", "ManufactureDate", "ExpiryDate");
+                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchName", "ProductID", "Quantity", "UnitID", "ManufactureDate", "ExpiryDate");
+                var productionBatchName = Extension.RamdomNumber();
+                var check = await ProductBatchNameExists(productionBatchName);
+                while (check)
+                {
+                    productionBatchName = Extension.RamdomNumber();
+                    check = await ProductBatchNameExists(productionBatchName);
+                }
+                productionBatch.ProductionBatchName = productionBatchName;
                 var data = await Program.Sql.QuerySingleAsync<ProductionBatch>(query, productionBatch);
                 productionBatch.ProductionBatchID = data.ProductionBatchID;
                 return new
@@ -49,17 +57,23 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM ProductionBatch pb LEFT JOIN Products p ON pb.ProductID = p.ProductID WHERE ProductionBatchID = @id;";
-                var res = await Program.Sql.QueryAsync<ResProductionBatch, Products, ResProductionBatch>(
+                var query = @"SELECT * FROM ProductionBatch pb 
+                                        LEFT JOIN Products p 
+                                            ON pb.ProductID = p.ProductID 
+                                        LEFT JOIN Units u 
+                                            ON pb.UnitID = u.UnitID
+                                        WHERE ProductionBatchID = @id;";
+                var res = await Program.Sql.QueryAsync<ProductBathResponse, Products, Units, ProductBathResponse>(
                     query,
-                    (productionBatch, product) =>
+                    (productionBatch, product, unit) =>
                     {
                         productionBatch.Products = product;
+                        productionBatch.Units = unit;
                         return productionBatch;
                     },
                     new { id },
 
-                    splitOn: "ProductID"
+                    splitOn: "ProductID, UnitID"
                 );
 
                 return new
@@ -78,15 +92,21 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM ProductionBatch pb LEFT JOIN Products p ON pb.ProductID = p.ProductID";
-                var res = await Program.Sql.QueryAsync<ResProductionBatch, Products, ResProductionBatch>(
+                var query = @"SELECT * FROM ProductionBatch pb 
+                                            LEFT JOIN Products p 
+                                                ON pb.ProductID = p.ProductID 
+                                            LEFT JOIN Units u 
+                                                ON pb.UnitID = u.UnitID
+                                            ORDER BY pb.ProductionBatchID DESC";
+                var res = await Program.Sql.QueryAsync<ProductBathResponse, Products, Units, ProductBathResponse>(
                     query,
-                    (productionBatch, product) =>
+                    (productionBatch, product, unit) =>
                     {
                         productionBatch.Products = product;
+                        productionBatch.Units = unit;
                         return productionBatch;
                     },
-                    splitOn: "ProductID"
+                    splitOn: "ProductID, UnitID"
                 );
 
                 return new
@@ -109,6 +129,7 @@ namespace API.Warehouse.Repositories.Services
                                 ProductID = @ProductID,                                 
                                 ProductionBatchName = @ProductionBatchName, 
                                 Quantity = @Quantity, 
+                                UnitID = @UnitID,
                                 ManufactureDate = @ManufactureDate, 
                                 ExpiryDate = @ExpiryDate 
                                     WHERE ProductionBatchID = @ProductionBatchID;";
@@ -125,5 +146,23 @@ namespace API.Warehouse.Repositories.Services
                 throw;
             }
         }
+        public async Task<bool> ProductBatchNameExists(string productBatchName)
+        {
+            try
+            {
+                var query = @"SELECT COUNT(*) FROM ProductionBatch WHERE ProductionBatchName = @ProductionBatchName";
+                var count = await Program.Sql.ExecuteScalarAsync<int>(query, new { ProductionBatchName = productBatchName });
+
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ nếu cần
+                Console.WriteLine($"Error checking existence of product batch name: {ex.Message}");
+                throw;
+            }
+        }
     }
+
+
 }

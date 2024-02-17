@@ -19,8 +19,9 @@ namespace Client.Pages.WarehouseManagers
         #endregion
 
         #region ListData
-        private List<ResProductionBatch> productionBatches { get; set; } = default!;
+        private List<ProductBathResponse> productionBatches { get; set; } = default!;
         private List<Products>? products { get; set; } = default!;
+        private List<Units>? units { get; set; } = default!;
         #endregion
 
         #region Inject
@@ -29,14 +30,16 @@ namespace Client.Pages.WarehouseManagers
         [Inject]
         protected ProductionBatchServices productionBatchServices { get; set; } = default!;
         [Inject]
+        protected UnitServices unitServices { get; set; } = default!;
+        [Inject]
         protected SweetAlertService Swal { get; set; } = default!;
         #endregion
 
         [SupplyParameterFromForm]
-        ResProductionBatch? productionBatchModel { get; set; }
+        ProductBathResponse? productionBatchModel { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            productionBatchModel ??= new ResProductionBatch();
+            productionBatchModel ??= new ProductBathResponse();
             productionBatchModel.ExpiryDate = DateTime.Now;
             productionBatchModel.ManufactureDate = DateTime.Now;
             await GetProductBatchs();
@@ -51,8 +54,9 @@ namespace Client.Pages.WarehouseManagers
                 //create new product
                 var data = new ProductionBatch
                 {
-                    ProductionBatchName = productionBatchModel.ProductionBatchName,
                     ProductID = productionBatchModel.ProductID,
+                    UnitID = productionBatchModel.UnitID,
+                    ProductionBatchName = "",
                     Quantity = productionBatchModel.Quantity,
                     ManufactureDate = productionBatchModel.ManufactureDate,
                     ExpiryDate = productionBatchModel.ExpiryDate,
@@ -159,28 +163,16 @@ namespace Client.Pages.WarehouseManagers
         {
             productionBatches = await productionBatchServices.GetProductionBatchs();
             products = await productServices.GetProductsInProductionBatch();
+            units = await unitServices.GetUnits();
         }
         private void GetProducts()
         {
             addProductionBatch = true;
+            IsButtonDisabled = false;
         }
         #endregion
 
         #region Validate
-        private void ValidateInput(ChangeEventArgs e)
-        {
-            string input = e.Value!.ToString()!;
-            if (input.Length != 4)
-            {
-                IsButtonDisabled = true;
-                ErrorMessage = "Product batch name must be 4 characters long.";
-            }
-            else
-            {
-                IsButtonDisabled = false;
-                ErrorMessage = "";
-            }
-        }
         private void HandleManufactureDateChange(ChangeEventArgs e)
         {
             if (!DateTime.TryParse(e.Value!.ToString(), out DateTime selectedDate) ||
@@ -224,5 +216,9 @@ namespace Client.Pages.WarehouseManagers
         }
 
         #endregion
+        private void ClearData()
+        {
+            productionBatchModel = new();
+        }
     }
 }

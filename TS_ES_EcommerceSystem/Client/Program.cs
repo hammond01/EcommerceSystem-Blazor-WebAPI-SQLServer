@@ -34,6 +34,7 @@ class Program
         builder.Services.AddScoped<ProductionBatchServices>();
         builder.Services.AddScoped<StockInBoundServices>();
         builder.Services.AddScoped<StockOutBoundServices>();
+        builder.Services.AddScoped<UnitServices>();
         builder.Services.AddScoped<SweetAlertService>();
         builder.Services.AddBlazorBootstrap();
         builder.Services.AddSweetAlert2();

@@ -10,7 +10,7 @@ namespace Client.Services
 {
     public class ProductionBatchServices
     {
-        public async Task<List<ResProductionBatch>> GetProductionBatchs()
+        public async Task<List<ProductBathResponse>> GetProductionBatchs()
         {
             var request = await Program.httpClient.GetAsync($"ProductionBatchs/gets");
 
@@ -21,13 +21,13 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    var r = json.GetProperty("data").GetObject<List<ResProductionBatch>>();
+                    var r = json.GetProperty("data").GetObject<List<ProductBathResponse>>();
 
                     return r;
                 }
             }
 
-            return new List<ResProductionBatch>();
+            return new List<ProductBathResponse>();
         }
         public async Task<string> CreateProductionBatch(ProductionBatch productionBatch)
         {
@@ -69,7 +69,7 @@ namespace Client.Services
             return "Deletion failed";
         }
 
-        public async Task<ResProductionBatch> GetProductionBatchById(int id)
+        public async Task<ProductBathResponse> GetProductionBatchById(int id)
         {
             // Assuming you have an API endpoint for getting a product by ID
             var request = await Program.httpClient.GetAsync($"ProductionBatchs/get/{id}");
@@ -81,15 +81,15 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    var r = json.GetProperty("data")[0].GetObject<ResProductionBatch>();
+                    var r = json.GetProperty("data")[0].GetObject<ProductBathResponse>();
                     return r;
                 }
             }
 
             // Handle failure or other scenarios
-            return new ResProductionBatch();
+            return new ProductBathResponse();
         }
-        public async Task<bool> UpdateProductionBatch(ResProductionBatch updatedProductionBatch)
+        public async Task<bool> UpdateProductionBatch(ProductBathResponse updatedProductionBatch)
         {
             var content = new StringContent(JsonConvert.SerializeObject(updatedProductionBatch), Encoding.UTF8, "application/json");
 

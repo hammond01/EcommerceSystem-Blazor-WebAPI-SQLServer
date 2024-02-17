@@ -19,5 +19,15 @@
             string query = $"DELETE FROM {table} WHERE {idColumn} = '{props}';";
             return query;
         }
+        private static readonly Random _random = new Random();
+        public static string RamdomNumber()
+        {
+            char[] chars = new char[6];
+            for (int i = 0; i < 6; i++)
+            {
+                chars[i] = (char)(_random.Next(0, 10) + '0');
+            }
+            return new string(chars);
+        }
     }
 }
