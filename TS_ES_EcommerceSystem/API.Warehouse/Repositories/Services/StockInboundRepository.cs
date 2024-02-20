@@ -45,6 +45,37 @@ namespace API.Warehouse.Repositories.Services
             }
         }
 
+        public async Task<object> GetInformationInboundByWareHouseID(int id)
+        {
+            try
+            {
+                var query = @"SELECT 
+                                si.InboundID,
+	                            pb.ProductionBatchName,
+	                            p.ProductName,
+	                            u.UnitName,
+	                            si.QuantityInbound,
+	                            si.DateInbound,
+	                            pb.ManufactureDate,
+	                            pb.ExpiryDate
+                            FROM StockInbound si
+	                            LEFT JOIN ProductionBatch pb ON si.ProductionBatchID = pb.ProductionBatchID 
+	                            LEFT JOIN Products p ON pb.ProductID = p.ProductID
+	                            LEFT JOIN Units u ON pb.UnitID = u.UnitID
+                            WHERE si.WareHouseID = @id";
+                var res = await Program.Sql.QueryAsync<InformationStockInboundFromWarehouse>(query, new { id });
+                return new
+                {
+                    data = res,
+                    status = 200
+                };
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task<object> GetStockInbound(int id)
         {
             try

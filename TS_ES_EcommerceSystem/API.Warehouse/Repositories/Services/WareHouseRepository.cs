@@ -2,6 +2,7 @@
 using Dapper;
 using Heplers;
 using Models;
+using Models.ResponseModel;
 using Models.WarehouseModel;
 using Nest;
 
@@ -13,7 +14,7 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("Warehouse", "WareHouseID", "CostPrice", "ProductionBatchID", "QuantityTotal");
+                var query = Extension.GetInsertQuery("Warehouse", "WareHouseID", "WarehouseName", "Address", "Note");
                 var data = await Program.Sql.QuerySingleAsync<WareHouse>(query, wareHouse);
                 wareHouse.WareHouseID = data.WareHouseID;
                 return new
@@ -49,8 +50,24 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"SELECT * FROM Warehouse WHERE WareHouseID = @id;";
-                var res = await Program.Sql.QuerySingleAsync<WareHouse>(query, new { id });
+                var query = @"SELECT 
+	                            w.WareHouseID,
+	                            w.WarehouseName,
+	                            w.Address,
+	                            dw.CostPrice,
+	                            pb.ProductionBatchName,
+	                            u.UnitName,
+	                            p.ProductName,
+                                dw.ActualWarehouse,
+	                            pb.ManufactureDate,
+	                            pb.ExpiryDate
+		                            FROM Warehouse w 
+		                            LEFT JOIN DetailWarehouse dw ON w.WareHouseID = dw.WarehouseID
+		                            LEFT JOIN ProductionBatch pb ON dw.ProductionBatchID = pb.ProductionBatchID
+		                            LEFT JOIN Products p ON pb.ProductID = p.ProductID
+		                            LEFT JOIN Units u ON pb.UnitID = u.UnitID
+		                            WHERE w.WareHouseID = @id";
+                var res = await Program.Sql.QueryAsync<WarehouseResponse>(query, new { id });
                 return new
                 {
                     data = res,
@@ -86,9 +103,9 @@ namespace API.Warehouse.Repositories.Services
             try
             {
                 var query = @"UPDATE Warehouse SET 
-                                CostPrice = @CostPrice, 
-                                ProductionBatchID = @ProductionBatchID, 
-                                QuantityTotal = @QuantityTotal 
+                                Address = @Address, 
+                                WarehouseName = @WarehouseName, 
+                                Note = @Note 
                                     WHERE WareHouseID = @WareHouseID;";
                 wareHouse.WareHouseID = id;
                 await Program.Sql.ExecuteAsync(query, wareHouse);
