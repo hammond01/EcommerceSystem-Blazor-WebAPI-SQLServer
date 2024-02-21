@@ -2,8 +2,6 @@
 using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
-using Models;
-using Models.ResponseModel;
 using Models.WarehouseModel;
 using Radzen;
 
@@ -13,9 +11,7 @@ namespace Client.Pages.WarehouseManagers
     {
         private bool openEditForm = false;
         private int pageSize = 5;
-
         private List<WareHouse>? warehouses { get; set; } = default!;
-
         [Inject]
         protected WarehouseServices warehouseServices { get; set; } = default!;
         [Inject]
@@ -33,7 +29,6 @@ namespace Client.Pages.WarehouseManagers
             warehouseModel ??= new();
             await LoadData();
         }
-
         protected async Task LoadData()
         {
 
@@ -57,7 +52,6 @@ namespace Client.Pages.WarehouseManagers
                 ConfirmButtonText = "Yes, delete it!",
                 CancelButtonText = "No, keep it"
             });
-
             if (!string.IsNullOrEmpty(result.Value))
             {
                 var data = await warehouseServices.Delete(id);
@@ -73,20 +67,13 @@ namespace Client.Pages.WarehouseManagers
             }
             else if (result.Dismiss == DismissReason.Cancel)
             {
-                await Swal.FireAsync(
-                                          "Cancelled",
-                                          "Inventory is safe :)",
-                                          SweetAlertIcon.Error
-                                    );
+                await Swal.FireAsync("Cancelled", "Inventory is safe :)", SweetAlertIcon.Error);
             }
-
-
         }
         protected async Task Create()
         {
             if (warehouseModel!.WareHouseID == 0)
             {
-                //create new product
                 var data = new WareHouse
                 {
                     WarehouseName = warehouseModel.WarehouseName,
@@ -109,7 +96,6 @@ namespace Client.Pages.WarehouseManagers
             }
             else
             {
-                // Update product
                 var update = await warehouseServices.Update(warehouseModel);
                 if (update == true)
                 {
@@ -137,6 +123,5 @@ namespace Client.Pages.WarehouseManagers
         {
             NotificationService.Notify(message);
         }
-
     }
 }
