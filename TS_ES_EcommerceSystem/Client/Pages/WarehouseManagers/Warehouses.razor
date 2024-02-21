@@ -1,30 +1,59 @@
 ﻿@page "/warehouse"
-
 <h1>Warehouse manager</h1>
-<hr />
+<button type="button" class="btn btn-primary" @onclick="()=> GetForm()">
+    Add new inventory
+</button>
+
 @if (warehouses is null)
 {
     <p><em>Loading....!</em></p>
 }
 else
 {
-    <table class="table table-striped table-hover table-responsive table-responsive-sm w-100">
-        <thead class="table-light">
-            <tr>
-                <th>Production Bath</th>
-                <th>Cost price</th>
-                <th>QuantityTotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var data in warehouses!)
-            {
-                <tr>
-                    <td>@data.ProductionBatchID</td>
-                    <td>@data.CostPrice</td>
-                    <td>@data.QuantityTotal</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @if (openEditForm)
+    {
+        <hr />
+        <EditForm Model="@warehouseModel" OnSubmit="@Create" FormName="Warehouseory">
+            <div class="row">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Warehouse name</span>
+                    <input @bind="@warehouseModel!.WarehouseName" type="text" class="form-control">
+                    <span class="input-group-text">Address</span>
+                    <input @bind="@warehouseModel!.Address" type="text" class="form-control">
+                </div>
+                <div class="colunm input-group input-group-sm mb-3">
+                    <label class="input-group-text">Note</label>
+                    <textarea @bind="@warehouseModel.Note" style="min-height:146px;" type="text" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="Close">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </div>
+        </EditForm>
+    }
+
+    <hr />
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="@pageSize" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@warehouses.AsQueryable()" TItem="@Models.WarehouseModel.WareHouse" ColumnWidth="300px" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
+        <Columns>
+            <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Property="WarehouseName" Title="Warehouse name" Width="200px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Property="Address" Title="Address"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Property="Note" Title="Note" Filterable="false" Sortable="false"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Title="Actions" TextAlign="TextAlign.Center" Width="170px">
+                <Template Context="data">
+                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true" @onclick="() => Detail(data.WareHouseID)"> </span>
+                    </a>
+                    <a class="w-20 btn btn-info mx-2 my-auto">
+                        <span class="bi bi-info-circle mx-1" aria-hidden="true" @onclick="() => Detail(data.WareHouseID)"> </span>
+                    </a>
+                    <a class="w-20 btn btn-danger mx-2 my-auto">
+                        <span class="bi bi-trash mx-1" aria-hidden="true" @onclick="() => Delete(data.WareHouseID)"> </span>
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 }
