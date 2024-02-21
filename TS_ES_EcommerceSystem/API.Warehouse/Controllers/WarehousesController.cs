@@ -1,6 +1,8 @@
 ﻿using API.Warehouse.Repositories.Interfaces;
+using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.ResponseModel;
 using Models.WarehouseModel;
 using Nest;
 
@@ -69,7 +71,7 @@ namespace API.Warehouse.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateWarehouse(int id, WareHouse warehouse)
         {
             try
@@ -90,7 +92,7 @@ namespace API.Warehouse.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteWarehouse(int id)
         {
             try
@@ -106,6 +108,23 @@ namespace API.Warehouse.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Error while getting delete warehouse with ID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("get-infor-warehouse-byid/{id}")]
+        public async Task<IActionResult> GetInforWarehouse(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to get information warehouse");
+                var query = @"SELECT * FROM Warehouse WHERE WareHouseID = @id";
+                var res = await Program.Sql.QueryFirstAsync<WareHouse>(query, new { id });
+                _logger.LogInformation($"Successfully retrieved information warehouse");
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting information warehouse: {ex.Message}");
                 return StatusCode(500, "Internal Server Error");
             }
         }
