@@ -3,8 +3,8 @@
     public class WareHouse
     {
         public int WareHouseID { get; set; }
-        public double CostPrice { get; set; }
-        public string? ProductionBatchID { get; set; }
-        public int QuantityTotal { get; set; }
+        public string? WarehouseName { get; set; }
+        public string? Address { get; set; }
+        public string? Note { get; set; }
     }
 }

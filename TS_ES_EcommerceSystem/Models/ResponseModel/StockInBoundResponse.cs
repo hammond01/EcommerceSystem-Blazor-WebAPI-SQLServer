@@ -4,6 +4,7 @@ namespace Models.ResponseModel
     public class StockInBoundResponse
     {
         public int InboundID { get; set; }
+        public int WareHouseID { get; set; }
         public DateTime DateInbound { get; set; }
         public int ProductionBatchID { get; set; }
         public int QuantityInbound { get; set; }

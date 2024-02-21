@@ -13,7 +13,7 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("StockInbound", "InboundID", "DateInbound", "ProductionBatchID", "QuantityInbound", "Note");
+                var query = Extension.GetInsertQuery("StockInbound", "InboundID", "DateInbound", "ProductionBatchID", "QuantityInbound", "WareHouseID", "Note");
                 var data = await Program.Sql.QuerySingleAsync<StockInbound>(query, stockInbound);
                 stockInbound.InboundID = data.InboundID;
                 return new
@@ -57,7 +57,8 @@ namespace API.Warehouse.Repositories.Services
 	                            si.QuantityInbound,
 	                            si.DateInbound,
 	                            pb.ManufactureDate,
-	                            pb.ExpiryDate
+	                            pb.ExpiryDate,
+                                si.Note
                             FROM StockInbound si
 	                            LEFT JOIN ProductionBatch pb ON si.ProductionBatchID = pb.ProductionBatchID 
 	                            LEFT JOIN Products p ON pb.ProductID = p.ProductID
@@ -138,6 +139,7 @@ namespace API.Warehouse.Repositories.Services
                                 DateInbound = @DateInbound, 
                                 ProductionBatchID = @ProductionBatchID, 
                                 QuantityInbound = @QuantityInbound,
+                                WareHouseID = @WareHouseID,
                                 Note = @Note 
                                     WHERE InboundID = @InboundID;";
                 stockInbound.InboundID = id;

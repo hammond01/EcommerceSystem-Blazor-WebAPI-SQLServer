@@ -9,6 +9,7 @@ namespace Models.ResponseModel
         public int ProductID { get; set; }
         public int Quantity { get; set; }
         public int UnitID { get; set; }
+        public double PriceOfBatch { get; set; }
         public DateTime ManufactureDate { get; set; }
         public DateTime ExpiryDate { get; set; }
         public Products? Products { get; set; } = default!;

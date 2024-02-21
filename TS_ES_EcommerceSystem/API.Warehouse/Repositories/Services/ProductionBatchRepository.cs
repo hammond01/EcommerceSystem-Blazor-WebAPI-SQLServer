@@ -13,7 +13,7 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchName", "ProductID", "Quantity", "UnitID", "ManufactureDate", "ExpiryDate");
+                var query = Extension.GetInsertQuery("ProductionBatch", "ProductionBatchID", "ProductionBatchName", "ProductID", "Quantity", "UnitID", "PriceOfBatch", "ManufactureDate", "ExpiryDate");
                 var productionBatchName = Extension.RamdomNumber();
                 var check = await ProductBatchNameExists(productionBatchName);
                 while (check)
@@ -130,6 +130,7 @@ namespace API.Warehouse.Repositories.Services
                                 ProductionBatchName = @ProductionBatchName, 
                                 Quantity = @Quantity, 
                                 UnitID = @UnitID,
+                                PriceOfBatch = @PriceOfBatch,
                                 ManufactureDate = @ManufactureDate, 
                                 ExpiryDate = @ExpiryDate 
                                     WHERE ProductionBatchID = @ProductionBatchID;";
