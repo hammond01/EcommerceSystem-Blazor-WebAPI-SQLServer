@@ -1,6 +1,5 @@
 ﻿using Client.Helpers;
 using Models.ResponseModel;
-using Models.WarehouseModel;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
@@ -9,6 +8,11 @@ namespace Client.Services
 {
     public class StockOutBoundServices
     {
+        private readonly DetailWarehouseServices _detailWarehouseServices;
+        public StockOutBoundServices(DetailWarehouseServices detailWarehouseServices)
+        {
+            _detailWarehouseServices = detailWarehouseServices;
+        }
         public async Task<List<StockOutBoundResponse>> GetStockOutbounds()
         {
             var request = await Program.httpClient.GetAsync($"StockOutbounds/gets");
@@ -28,7 +32,7 @@ namespace Client.Services
 
             return new List<StockOutBoundResponse>();
         }
-        public async Task<string> CreateStockOutBound(StockOutbound stockOutbound)
+        public async Task<bool> CreateStockOutBound(StockOutBoundResponse stockOutbound)
         {
             var content = new StringContent(JsonConvert.SerializeObject(stockOutbound), Encoding.UTF8, "application/json");
 
@@ -41,10 +45,10 @@ namespace Client.Services
 
                 if (json.GetProperty("status").GetInt16() == 200)
                 {
-                    return "Created";
+                    return true;
                 }
             }
-            return "";
+            return false;
         }
         public async Task<string> DeleteStockOutbound(int id)
         {
@@ -106,6 +110,47 @@ namespace Client.Services
 
             // Handle failure or other scenarios
             return new StockOutBoundResponse();
+        }
+
+        public async Task<List<InformationStockOutboundFromWarehouse>> GetInformationOutBoundFromWarehouseID(int id)
+        {
+            // Assuming you have an API endpoint for getting a product by ID
+            var request = await Program.httpClient.GetAsync($"StockOutbounds/get-information-by-warehouseid/{id}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    var r = json.GetProperty("data").GetObject<List<InformationStockOutboundFromWarehouse>>();
+                    return r;
+                }
+            }
+            // Handle failure or other scenarios
+            return new List<InformationStockOutboundFromWarehouse>();
+        }
+
+        public async Task<InformationStockOutboundFromWarehouse> GetInfoOutBoundByOutBoundID(int warehouseID, int OutboundID)
+        {
+            var response = await GetInformationOutBoundFromWarehouseID(warehouseID);
+            if (response is not null)
+            {
+                var info = response.Where(h => h.OutboundID == OutboundID).FirstOrDefault()!;
+                return info;
+            }
+            return new InformationStockOutboundFromWarehouse();
+        }
+        public async Task<WarehouseResponse> GetInfoStockOutbound(int warehouseID, int detailWarehouseID)
+        {
+            var response = await _detailWarehouseServices.GetWarehouseInformation(warehouseID);
+            if (response is not null)
+            {
+                var info = response.Where(h => h.DetailWarehouseID == detailWarehouseID).FirstOrDefault()!;
+                return info;
+            }
+            return new WarehouseResponse();
         }
     }
 }

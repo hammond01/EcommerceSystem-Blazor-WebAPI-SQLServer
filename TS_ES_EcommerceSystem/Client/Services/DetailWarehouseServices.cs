@@ -46,5 +46,21 @@ namespace Client.Services
             }
             return "";
         }
+        public async Task<bool> Update(DetailWarehouseResponse obj)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
+            var request = await Program.httpClient.PutAsync($"DetailWarehouses/update/{obj.DetailWarehouseID}", content);
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -54,9 +54,29 @@ namespace API.Warehouse.Repositories.Services
             throw new NotImplementedException();
         }
 
-        public Task<object> UpdateDetailWarehouse(int id, DetailWarehouse wareHouse)
+        public async Task<object> UpdateDetailWarehouse(int id, DetailWarehouse wareHouse)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = @"UPDATE
+                                DetailWarehouse
+                            SET
+                                ActualWarehouse = @ActualWarehouse,
+                                CostPrice = @CostPrice
+                            WHERE
+                                DetailWarehouseID = @DetailWarehouseID";
+                wareHouse.DetailWarehouseID = id;
+                await Program.Sql.ExecuteAsync(query, wareHouse);
+                return new
+                {
+                    data = wareHouse,
+                    status = 200
+                };
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
