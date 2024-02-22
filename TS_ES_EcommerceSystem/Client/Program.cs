@@ -1,4 +1,5 @@
-﻿using Client;
+﻿using Blazored.LocalStorage;
+using Client;
 using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
@@ -34,11 +35,14 @@ class Program
         builder.Services.AddScoped<ProductionBatchServices>();
         builder.Services.AddScoped<StockInBoundServices>();
         builder.Services.AddScoped<StockOutBoundServices>();
+        builder.Services.AddScoped<DetailWarehouseServices>();
         builder.Services.AddScoped<UnitServices>();
         builder.Services.AddScoped<SweetAlertService>();
+        builder.Services.AddScoped<NotificationService>();
         builder.Services.AddBlazorBootstrap();
         builder.Services.AddSweetAlert2();
         builder.Services.AddRadzenComponents();
+        builder.Services.AddBlazoredLocalStorage();
         await builder.Build().RunAsync();
     }
 }

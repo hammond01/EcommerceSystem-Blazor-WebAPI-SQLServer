@@ -18,6 +18,7 @@ namespace Models.ResponseModel
         public int ActualWarehouse { get; set; }
         public DateTime? ManufactureDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
+        public string? FormattedCostPrice { get; set; }
 
     }
 }

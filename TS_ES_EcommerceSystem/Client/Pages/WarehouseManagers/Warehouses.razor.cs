@@ -100,6 +100,8 @@ namespace Client.Pages.WarehouseManagers
                 if (update == true)
                 {
                     await Swal.FireAsync("Updated", "Updated.", SweetAlertIcon.Success);
+                    warehouseModel = new();
+                    openEditForm = false;
                     await LoadData();
                 }
                 else
@@ -107,6 +109,12 @@ namespace Client.Pages.WarehouseManagers
                     await Swal.FireAsync("Error", "Error", SweetAlertIcon.Error);
                 }
             }
+        }
+        protected async Task GetInforWarehouse(int id)
+        {
+            warehouseModel = await warehouseServices.GetInfoByID(id);
+            openEditForm = true;
+            pageSize = 5;
         }
         private void GetForm()
         {
@@ -118,10 +126,6 @@ namespace Client.Pages.WarehouseManagers
             openEditForm = false;
             warehouseModel = new();
             pageSize = 10;
-        }
-        void ShowNotification(NotificationMessage message)
-        {
-            NotificationService.Notify(message);
         }
     }
 }

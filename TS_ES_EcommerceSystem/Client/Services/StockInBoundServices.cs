@@ -103,9 +103,27 @@ namespace Client.Services
                     return r;
                 }
             }
-
             // Handle failure or other scenarios
             return new StockInBoundResponse();
+        }
+        public async Task<List<InformationStockInboundFromWarehouse>> GetInformationFromWarehouseID(int id)
+        {
+            // Assuming you have an API endpoint for getting a product by ID
+            var request = await Program.httpClient.GetAsync($"StockInbounds/get-information-by-warehouseid/{id}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    var r = json.GetProperty("data").GetObject<List<InformationStockInboundFromWarehouse>>();
+                    return r;
+                }
+            }
+            // Handle failure or other scenarios
+            return new List<InformationStockInboundFromWarehouse>();
         }
     }
 }

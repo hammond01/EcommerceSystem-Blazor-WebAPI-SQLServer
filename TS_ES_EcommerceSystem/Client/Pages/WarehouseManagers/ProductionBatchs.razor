@@ -17,14 +17,15 @@ else
                     Data="@productionBatches.AsQueryable()" TItem="@ProductBathResponse" ColumnWidth="150px" AllowFiltering="true" FilterMode="FilterMode.Simple"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
         <Columns>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch name" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch number" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Products.ProductName" Title="Product Name"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Quantity" Title="Quantity" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="PriceOfBatch" Title="Price Of Batch" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ManufactureDate" Title="Manufacture date"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ExpiryDate" Title="Expiry date"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@ProductBathResponse" Title="Actions" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
+                    <a class="w-20 btn btn-success mx-2 my-auto" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
                         <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
                     </a>
                     <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => DeleteProductbatch(data.ProductionBatchID)">
@@ -70,6 +71,10 @@ else
                         <div class="input-group input-group-sm mb-3">
                             <label class="input-group-text">Quantity</label>
                             <input @bind="@productionBatchModel.Quantity" type="number" class="form-control">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <label class="input-group-text">Price Of Batch</label>
+                            <input @bind="@productionBatchModel.PriceOfBatch" type="number" class="form-control">
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <label class="input-group-text">Manufacture Date</label>

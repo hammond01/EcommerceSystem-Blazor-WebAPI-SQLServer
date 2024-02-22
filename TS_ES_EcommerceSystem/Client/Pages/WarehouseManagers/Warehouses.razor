@@ -43,8 +43,8 @@ else
             <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Property="Note" Title="Note" Filterable="false" Sortable="false"></RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="@Models.WarehouseModel.WareHouse" Title="Actions" TextAlign="TextAlign.Center" Width="170px">
                 <Template Context="data">
-                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal">
-                        <span class="bi bi-pencil mx-1" aria-hidden="true" @onclick="() => Detail(data.WareHouseID)"> </span>
+                    <a class="w-20 btn btn-success mx-2 my-auto">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true" @onclick="() => GetInforWarehouse(data.WareHouseID)"> </span>
                     </a>
                     <a class="w-20 btn btn-info mx-2 my-auto">
                         <span class="bi bi-info-circle mx-1" aria-hidden="true" @onclick="() => Detail(data.WareHouseID)"> </span>
