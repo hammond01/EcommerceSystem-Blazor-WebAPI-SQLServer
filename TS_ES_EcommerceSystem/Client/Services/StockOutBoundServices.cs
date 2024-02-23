@@ -152,5 +152,24 @@ namespace Client.Services
             }
             return new WarehouseResponse();
         }
+        public async Task<List<WarehouseResponse>> GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(int id)
+        {
+            // Assuming you have an API endpoint for getting a product by ID
+            var request = await Program.httpClient.GetAsync($"StockOutbounds/get-information-actualwarehouse-greater-than-zero-by-warehouseid/{id}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+
+                if (json.GetProperty("status").GetInt16() == 200)
+                {
+                    var r = json.GetProperty("data").GetObject<List<WarehouseResponse>>();
+                    return r;
+                }
+            }
+            // Handle failure or other scenarios
+            return new List<WarehouseResponse>();
+        }
     }
 }

@@ -42,51 +42,6 @@ else
             </div>
         </EditForm>
     }
-    @if (informationStockOutboundModel is not null && openDetailDialog)
-    {
-        <div class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="detailStockInBoundModalLabel">Thông tin chi tiết sản phẩm</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Số lô sản phẩm:</label>
-                                <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ProductionBatchName</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Ngày xuất kho:</label>
-                                <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.DateOutbound</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Ngày sản xuất lô sản phẩm:</label>
-                                <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ManufactureDate</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Ngày hết hạn lô sản phẩm:</label>
-                                <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ExpiryDate</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">.................................</label>
-                                <label for="recipient-name" class="col-form-label">...................................................................</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">.................................</label>
-                                <label for="recipient-name" class="col-form-label">...................................................................</label>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    }
     @if (showListProductInWarehouse)
     {
         <div class="row justify-content-between">
@@ -109,6 +64,7 @@ else
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ProductionBatchName" Title="Số lô" TextAlign="TextAlign.Center" Width="100px"></RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ProductName" Title="Tên sản phẩm" Width="395px"></RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="UnitName" Title="Loại"></RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="@WarehouseResponse" Property="FormattedCostPrice" Title="Giá sản phẩm tồn kho" TextAlign="TextAlign.Center" Filterable="false"></RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ActualWarehouse" Title="Số lượng tồn kho" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ManufactureDate" Title="Ngày sản xuất"></RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ExpiryDate" Title="Ngày hết hạn"></RadzenDataGridColumn>
@@ -121,6 +77,65 @@ else
                 </RadzenDataGridColumn>
             </Columns>
         </RadzenDataGrid>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tùy chọn xuất kho</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="@stockOutBoundModel" OnSubmit="@Create" FormName="Inbound">
+                            <div class="row">
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Lô sản phẩm</label>
+                                    <input @bind="@warehouseResponseModel!.ProductionBatchName" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Tên sản phẩm tương ứng</label>
+                                    <input @bind="@warehouseResponseModel.ProductName" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Loại đóng gói</label>
+                                    <input @bind="@warehouseResponseModel.UnitName" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Số lượng tồn kho</label>
+                                    <input @bind="@warehouseResponseModel.ActualWarehouse" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Ngày nhập lô sản phẩm</label>
+                                    <input @bind="@warehouseResponseModel.ManufactureDate" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Ngày hết hạn lô sản phẩm</label>
+                                    <input @bind="@warehouseResponseModel.ExpiryDate" type="text" class="form-control" disabled style="max-width:500px;">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Số lượng xuất kho</label>
+                                    <input @bind="@stockOutBoundModel!.QuantityOutbound" type="number" class="form-control" style="max-width:500px;" @oninput="CheckQuantity">
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    @if (!string.IsNullOrEmpty(checkQuantityOutBound))
+                                    {
+                                        <div class="input-group-text alert alert-danger w-full">@checkQuantityOutBound</div>
+                                    }
+                                </div>
+                                <div class="colunm input-group input-group-sm mb-3">
+                                    <label style="width:180px;" class="input-group-text">Ghi chú</label>
+                                    <textarea @bind="@stockOutBoundModel!.Note" type="number" class="form-control" style="max-width:500px;  height:200px;"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Đóng</button>
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" disabled="@buttonSaveOutBound">Xác nhận</button>
+                            </div>
+                        </EditForm>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     }
     else
     {
@@ -155,7 +170,7 @@ else
                         <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => Delete(data.OutboundID)">
                             <span class="bi bi-trash mx-1" aria-hidden="true"> </span>
                         </a>
-                        <a class="w-20 btn btn-warning mx-2 my-auto" @onclick="() => DetaiOutbound(data.OutboundID)">
+                        <a class="w-20 btn btn-warning mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#detailStockInBoundModal" @onclick="() => DetaiOutbound(data.OutboundID)">
                             <span class="bi bi-info-square mx-1" aria-hidden="true"> </span>
                         </a>
                     </Template>
@@ -164,58 +179,48 @@ else
         </RadzenDataGrid>
     }
 }
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Tùy chọn xuất kho</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+@if (informationStockOutboundModel is not null && openDetailDialog)
+{
+    <div class="modal fade" id="detailStockInBoundModal" tabindex="-1" aria-labelledby="detailStockInBoundModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="detailStockInBoundModalLabel">Thông tin chi tiết sản phẩm</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Số lô sản phẩm:</label>
+                            <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ProductionBatchName</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Ngày xuất kho:</label>
+                            <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.DateOutbound</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Ngày sản xuất lô sản phẩm:</label>
+                            <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ManufactureDate</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Ngày hết hạn lô sản phẩm:</label>
+                            <label for="recipient-name" class="col-form-label">@informationStockOutboundModel!.ExpiryDate</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">.................................</label>
+                            <label for="recipient-name" class="col-form-label">...................................................................</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">.................................</label>
+                            <label for="recipient-name" class="col-form-label">...................................................................</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <EditForm Model="@stockOutBoundModel" OnSubmit="@Create" FormName="Inbound">
-                    <div class="row">
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Lô sản phẩm</label>
-                            <input @bind="@warehouseResponseModel!.ProductionBatchName" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Tên sản phẩm tương ứng</label>
-                            <input @bind="@warehouseResponseModel.ProductName" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Loại đóng gói</label>
-                            <input @bind="@warehouseResponseModel.UnitName" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Số lượng tồn kho</label>
-                            <input @bind="@warehouseResponseModel.ActualWarehouse" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Ngày nhập lô sản phẩm</label>
-                            <input @bind="@warehouseResponseModel.ManufactureDate" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Ngày hết hạn lô sản phẩm</label>
-                            <input @bind="@warehouseResponseModel.ExpiryDate" type="text" class="form-control" disabled style="max-width:500px;">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            <label style="width:180px;" class="input-group-text">Số lượng xuất kho</label>
-                            <input @bind="@stockOutBoundModel!.QuantityOutbound" type="number" class="form-control" style="max-width:500px;" @oninput="CheckQuantity">
-                        </div>
-                        <div class="colunm input-group input-group-sm mb-3">
-                            @if (!string.IsNullOrEmpty(checkQuantityOutBound))
-                            {
-                                <div class="input-group-text alert alert-danger w-full">@checkQuantityOutBound</div>
-                            }
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Đóng</button>
-                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" disabled="@buttonSaveOutBound">Xác nhận</button>
-                    </div>
-                </EditForm>
-            </div>
-
         </div>
     </div>
-</div>
+
+}

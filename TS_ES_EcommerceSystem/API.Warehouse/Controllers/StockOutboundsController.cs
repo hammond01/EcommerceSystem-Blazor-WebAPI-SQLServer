@@ -128,5 +128,24 @@ namespace API.Warehouse.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+        [HttpGet("get-information-actualwarehouse-greater-than-zero-by-warehouseid/{id}")]
+        public async Task<IActionResult> GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to Get Info Warehouse ActualWarehouse Greater Than Zero By WarehouseID: {id}");
+
+                var res = await _repo.GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(id);
+
+                _logger.LogInformation($"Successfully retrieved Get Info Warehouse ActualWarehouse Greater Than Zero By WarehouseID: {id}");
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting Get Info Warehouse ActualWarehouse Greater Than Zero By WarehouseID {id}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }

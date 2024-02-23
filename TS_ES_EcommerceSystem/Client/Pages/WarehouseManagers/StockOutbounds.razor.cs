@@ -20,7 +20,6 @@ namespace Client.Pages.WarehouseManagers
         private bool showListProductInWarehouse = false;
         private string productNameChoose = "";
         private string checkQuantityOutBound { get; set; } = default!;
-
         [Parameter]
         public int id { get; set; }
         #endregion
@@ -106,6 +105,7 @@ namespace Client.Pages.WarehouseManagers
                             Detail = "Create stock in inventory success!",
                             Duration = 2000
                         });
+                        await StockOutBound();
                     }
                 }
                 else
@@ -254,7 +254,7 @@ namespace Client.Pages.WarehouseManagers
         {
             showListProductInWarehouse = true;
             var warehouseID = localStorage.GetItem<int>("warehouseID");
-            listWarehouseResponses = await detailWarehouseServices.GetWarehouseInformation(warehouseID);
+            listWarehouseResponses = await stockOutBoundServices.GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(warehouseID);
             foreach (var response in listWarehouseResponses)
             {
                 response.FormattedCostPrice = Int32.Parse(response.CostPrice.ToString()!).ToString("N0", CultureInfo.GetCultureInfo("vi-VN")) + " VND";

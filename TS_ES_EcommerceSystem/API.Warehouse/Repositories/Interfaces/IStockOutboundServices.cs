@@ -10,6 +10,7 @@ namespace API.Warehouse.Repositories.Interfaces
         public Task<object> UpdateStockOutbound(int id, StockOutbound wareHouse);
         public Task<object> AddStockOutbound(StockOutbound wareHouse);
         public Task<object> GetInformationOutboundByWareHouseID(int id);
+        public Task<object> GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(int id);
 
     }
 }

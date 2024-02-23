@@ -154,5 +154,43 @@ namespace API.Warehouse.Repositories.Services
                 throw;
             }
         }
+        public async Task<object> GetInfoWarehouseActualWarehouseGreaterThanZeroByWarehouseID(int id)
+        {
+            try
+            {
+                var query = @"SELECT
+                                w.WareHouseID,
+                                w.WarehouseName,
+                                w.Address,
+                                dw.CostPrice,
+                                dw.DetailWarehouseID,
+                                pb.ProductionBatchName,
+                                pb.ProductionBatchID,
+                                u.UnitName,
+                                p.ProductName,
+                                dw.ActualWarehouse,
+                                pb.ManufactureDate,
+                                pb.ExpiryDate
+                            FROM
+                                Warehouse w
+                                LEFT JOIN DetailWarehouse dw ON w.WareHouseID = dw.WarehouseID
+                                LEFT JOIN ProductionBatch pb ON dw.ProductionBatchID = pb.ProductionBatchID
+                                LEFT JOIN Products p ON pb.ProductID = p.ProductID
+                                LEFT JOIN Units u ON pb.UnitID = u.UnitID
+                            WHERE
+                                w.WareHouseID = 1
+                                AND dw.ActualWarehouse > 0";
+                var res = await Program.Sql.QueryAsync<WarehouseResponse>(query, new { id });
+                return new
+                {
+                    data = res,
+                    status = 200
+                };
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
