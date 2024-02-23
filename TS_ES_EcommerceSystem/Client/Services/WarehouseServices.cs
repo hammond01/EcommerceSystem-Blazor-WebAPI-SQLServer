@@ -87,5 +87,20 @@ namespace Client.Services
             // Handle update failure or other scenarios
             return false;
         }
+        public async Task<WareHouse> GetInfoByID(int id)
+        {
+            // Assuming you have an API endpoint for getting a product by ID
+            var request = await Program.httpClient.GetAsync($"WareHouses/get-infor-warehouse-byid/{id}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                var jsonString = await request.Content.ReadAsStringAsync();
+                var json = JsonDocument.Parse(jsonString).RootElement;
+                var r = json.GetObject<WareHouse>();
+                return r;
+            }
+            // Handle failure or other scenarios
+            return new WareHouse();
+        }
     }
 }

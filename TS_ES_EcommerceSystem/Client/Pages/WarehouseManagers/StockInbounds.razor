@@ -2,74 +2,127 @@
 
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="()=> GetProducts()" data-bs-target="#addModal">
-    Add product to warehouse
+<button type="button" class="btn btn-primary" @onclick="()=> GetProducts()">
+    Nhập lô sản phẩm mới
 </button>
-<h1>Stock in warehouse</h1>
 <hr />
-@if (productionBatches is null || stockInbounds is null)
+@if (productionBatches is null || informationStockInbounds is null)
 {
     <p><em>Loading....!</em></p>
 }
 else
 {
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">@((addButton == true ? "Add" : "Edit") + " product batch")</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @if (openEditForm)
+    {
+        <EditForm Model="@stockInboundModel" OnSubmit="@Create" FormName="Inbound">
+            <div class="row">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Lô sản phẩm</span>
+                    <RadzenDropDown AllowClear="true"
+                                    TValue="int" @bind-Value="stockInboundModel!.ProductionBatchID" Placeholder="Chọn lô sản phẩm"
+                                    Change=@OnChangeProductBath
+                                    AllowFiltering="true"
+                                    Data="@(productionBatches.AsQueryable())" TextProperty="ProductionBatchName" ValueProperty="ProductionBatchID"
+                                    Style="width: 100%; max-width: 362px;" />
+                    <span class="input-group-text">Số lượng nhập</span>
+                    <input @bind="@stockInboundModel!.QuantityInbound" type="number" class="form-control" @oninput="CalculateEstimatedPrice">
+                    <span class="input-group-text">đơn vị tính bằng lô</span>
                 </div>
-                <div class="modal-body">
-                    <EditForm Model="@stockInboundModel" OnSubmit="@Create" FormName="Inbound">
-                        <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text" for="Product">Product batch</label>
-                            <select class="form-select" id="Product" @bind="@stockInboundModel!.ProductionBatchID">
-                                <option selected>
-                                    Choose...
-                                </option>
-                                @foreach (var data in productionBatches!)
-                                {
-                                    <option value="@data.ProductionBatchID">@data.ProductionBatchName</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Quantity inbound</label>
-                            <input @bind="@stockInboundModel.QuantityInbound" type="number" class="form-control">
-                        </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Note</label>
-                            <textarea @bind="@stockInboundModel.Note" type="text" class="form-control"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Cancel</button>
-                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit">Save</button>
-                        </div>
-                    </EditForm>
+                <div class="colunm input-group input-group-sm mb-3">
+                    <label class="input-group-text">Tên sản phẩm tương ứng</label>
+                    <input @bind="@productNameChoose" type="text" class="form-control" disabled style="max-width:500px;">
+                    <span></span>
+                    <label class="input-group-text" style="margin-left:30px;">Giá của lô</label>
+                    <input @bind="@priceOfBatchChoose" type="text" class="form-control" disabled style="max-width:170px;">
+                    <span class="input-group-text">VND</span>
+                    <label class="input-group-text" style="margin-left:30px;">Giá tạm tính</label>
+                    <span type="text" class="form-control" disabled style="max-width:170px;">@formattedEstimatedPrice</span>
+                    <span class="input-group-text">VND</span>
+                </div>
+                <div class="colunm input-group input-group-sm mb-3">
+                    <label class="input-group-text">Ghi chú</label>
+                    <textarea @bind="@stockInboundModel.Note" style="min-height:110px;" type="text" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="ClearData">Trở lại</button>
+                    <button class="btn btn-primary" type="submit" style="margin-left:10px; margin-right:10px">Lưu</button>
                 </div>
             </div>
+        </EditForm>
+    }
+    <div class="row justify-content-between">
+        <div class="col-4 text-start">
+            <a class="w-20 btn btn-light mx-2 my-auto" @onclick="()=>BackToPage()">
+                <span class="bi bi-arrow-left-circle mx-1" aria-hidden="true"> Trở lại</span>
+            </a>
+        </div>
+        <div class="col-4 text-center">
+            <h1>Các lô sản phẩm trong kho</h1>
+        </div>
+        <div class="col-4 text-end">
         </div>
     </div>
-    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@stockInbounds.AsQueryable()" TItem="@StockInBoundResponse" ColumnWidth="300px" AllowFiltering="true" FilterMode="FilterMode.Simple"
+    <hr />
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="@pageSize" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@informationStockInbounds.AsQueryable()" TItem="@InformationStockInboundFromWarehouse" AllowFiltering="true" FilterMode="FilterMode.Simple"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
         <Columns>
-            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch name"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="DateInbound" Title="DateInbound"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="QuantityInbound" Title="Quantity inbound"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@StockInBoundResponse" Property="Note" Title="Note"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@StockInBoundResponse" Title="Actions" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" TextAlign="TextAlign.Center" Property="ProductionBatchName" Title="Số lô" Width="100px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="UnitName" Title="Phân loại" Width="120px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="QuantityInbound" Title="Số lượng lô nhập"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="FormattedCostPrice" Title="Giá tạm tính"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="Note" Title="Ghi chú"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="DateInbound" Title="Ngày nhập"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal" @onclick="() => GetStockInbound(data.InboundID)">
-                        <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
+                    <a class="w-20 btn btn-success mx-2 my-auto" @onclick="() => GetStockInbound(data.InboundID)">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true"> </span>
                     </a>
                     <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => Delete(data.InboundID)">
-                        <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
+                        <span class="bi bi-trash mx-1" aria-hidden="true"> </span>
+                    </a>
+                    <a class="w-20 btn btn-warning mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#detailStockInBoundModal" @onclick="() => DetaiInbound(data.InboundID)">
+                        <span class="bi bi-info-square mx-1" aria-hidden="true"> </span>
                     </a>
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
+    @if (stockInboundModel is not null && openDetailDialog)
+    {
+        <div class="modal fade" id="detailStockInBoundModal" tabindex="-1" aria-labelledby="detailStockInBoundModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="detailStockInBoundModalLabel">Thông tin chi tiết sản phẩm</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Tên lô sản phẩm:</label>
+                                <label for="recipient-name" class="col-form-label">@stockInboundModel!.ProductionBatch.ProductionBatchName</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Ngày nhập kho:</label>
+                                <label for="recipient-name" class="col-form-label">@stockInboundModel!.DateInbound</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">.................................</label>
+                                <label for="recipient-name" class="col-form-label">...................................................................</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">.................................</label>
+                                <label for="recipient-name" class="col-form-label">...................................................................</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    }
 }

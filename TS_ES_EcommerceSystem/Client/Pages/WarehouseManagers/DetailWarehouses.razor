@@ -1,0 +1,51 @@
+﻿@* @page "/detailWarehouse/{id:int}" using parameter*@
+@page "/detailWarehouse"
+<h1>Thông tin chi tiết sản phẩm trong kho</h1>
+@if (warehouseResponses is null)
+{
+    <p><em>Đang tải....!</em></p>
+}
+else
+{
+    <div class="row justify-content-between">
+        <div class="col-4 text-start">
+            <a class="w-20 btn btn-light mx-2 my-auto" @onclick="()=>BackToPage()">
+                <span class="bi bi-arrow-left-circle mx-1" aria-hidden="true"> Trở lại</span>
+            </a>
+        </div>
+        <div class="col-4 text-center">
+            <h4>Tên kho: @warehouseResponses[0].WarehouseName</h4>
+            <h6>Địa chỉ: @warehouseResponses[0].Address</h6>
+        </div>
+        <div class="col-4 text-end">
+        </div>
+    </div>
+    <hr />
+    <div class="row justify-content-between">
+        <div class="col-4 text-start">
+            <a class="w-20 btn btn-primary mx-2 my-auto" @onclick="()=>GotoInInventoryPage()">
+                <span class="bi bi-box-arrow-in-down mx-1" aria-hidden="true"> Nhập kho</span>
+            </a>
+        </div>
+        <div class="col-4 text-end">
+            <a class="w-20 btn btn-primary mx-2 my-auto text-right" @onclick="()=>GotoOutInventoryPage()">
+                <span class="bi bi-box-arrow-up mx-1" aria-hidden="true"> Xuất kho</span>
+            </a>
+        </div>
+    </div>
+
+    <hr />
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@warehouseResponses.AsQueryable()" TItem="@WarehouseResponse" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
+        <Columns>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ProductionBatchName" Title="Số lô" TextAlign="TextAlign.Center" Width="100px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ProductName" Title="Tên sản phẩm" Width="395px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="UnitName" Title="Loại"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="FormattedCostPrice" Title="Giá sản phẩm tồn kho" TextAlign="TextAlign.Center" Filterable="false"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ActualWarehouse" Title="Số lượng tồn kho" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ManufactureDate" Title="Ngày sản xuất"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@WarehouseResponse" Property="ExpiryDate" Title="Ngày hết hạn"></RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
