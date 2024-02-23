@@ -96,7 +96,6 @@ namespace Server.Controllers
 
                 _logger.LogInformation($"Successfully add product");
 
-                //Send msg to RabbitMQ
                 var msgModel = new EProduct
                 {
                     ProductID = product.ProductID,
@@ -104,7 +103,6 @@ namespace Server.Controllers
                     UnitPrice = product.UnitPrice,
                 };
                 _messagePublisher.SendMessage(msgModel, "Products", "add");
-
                 return Ok(res);
             }
             catch (Exception ex)

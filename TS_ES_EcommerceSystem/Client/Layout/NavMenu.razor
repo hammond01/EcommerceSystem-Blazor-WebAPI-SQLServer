@@ -12,75 +12,67 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link p-2" style="cursor:pointer;" href="">
                 <div class="hstack gap-1">
-                    <span class="bi bi-house-door-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                    <span>Home</span>
+                    <span class="bi bi-house-door-fill fs-3 text-center" aria-hidden="true"
+                          style="margin-top:-2rem;"></span>
+                    <span>Trang chủ</span>
                 </div>
             </NavLink>
-            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerWarehouse" style="cursor:pointer;" href="javascript:void(0)">
+            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerWarehouse" style="cursor:pointer;"
+                     href="javascript:void(0)">
                 <div class="hstack gap-1">
                     @if (ShowWarehouse)
                     {
-                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
                     }
                     else
                     {
-                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
                     }
-                    <span>Warehouse Manager</span>
+                    <span>Quản lý kho</span>
                 </div>
             </NavLink>
             @if (ShowWarehouse)
             {
-                <a class="nav-link text-white" href="warehouse" style="margin-left:5rem; visibility:visible;">
+                <a class="nav-link text-white" href="warehouse" style="margin-left:3rem; visibility:visible;">
                     <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Warehouse</span>
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
+                        <span>Thông tin kho</span>
                     </div>
                 </a>
-                <a class="nav-link text-white" href="productionBatch" style="margin-left:5rem; visibility:visible;">
+                <a class="nav-link text-white" href="productionBatch" style="margin-left:3rem; visibility:visible;">
                     <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Product batch</span>
-                    </div>
-                </a>
-                <a class="nav-link text-white" href="stockInbound" style="margin-left:5rem; visibility:visible;">
-                    <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Stock in bound</span>
-                    </div>
-                </a>
-                <a class="nav-link text-white" href="stockOutbound" style="margin-left:5rem; visibility:visible;">
-                    <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Stock out bound</span>
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
+                        <span>Các lô sản phẩm</span>
                     </div>
                 </a>
             }
-            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerProduct" style="cursor:pointer;" href="javascript:void(0)">
+            <NavLink class="nav-link p-2" @onclick="ShowMenuContainerProduct" style="cursor:pointer;"
+                     href="javascript:void(0)">
                 <div class="hstack gap-1">
                     @if (ShowProduct)
                     {
-                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span class="bi bi-arrow-down-right-square-fill fs-3 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
                     }
                     else
                     {
-                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                        <span class="bi bi-arrow-right-square-fill fs-3 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
                     }
-                    <span>Product Manager</span>
+                    <span>Quản lý sản phẩm</span>
                 </div>
             </NavLink>
             @if (ShowProduct)
             {
                 <a class="nav-link text-white" href="product" style="margin-left:5rem; visibility:visible;">
                     <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Product</span>
-                    </div>
-                </a>
-                <a class="nav-link text-white" href="productionBatch" style="margin-left:5rem; visibility:visible;">
-                    <div class="hstack">
-                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
-                        <span>Category</span>
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
+                        <span>Sản phẩm</span>
                     </div>
                 </a>
             }

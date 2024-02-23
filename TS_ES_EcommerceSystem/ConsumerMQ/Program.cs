@@ -42,7 +42,7 @@ internal class Program
                         var response = await apiHelper.Create(jsonObject, actionEndpoint!, ELASTICSEARCH);
                         if (response == true)
                         {
-                            Console.WriteLine("Upload product to Elasticsearch succesfull");
+                            Console.WriteLine("Upload product to Elasticsearch successful");
                             Console.WriteLine(message);
                         }
                         else

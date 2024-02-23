@@ -14,6 +14,7 @@ namespace Client.Pages.ProductManagers
         private int pageSize = 10;
         private string searchTerm = "";
         private int totalPage;
+        private bool editFunction;
 
         [SupplyParameterFromForm]
         Models.Products? productModel { get; set; }
@@ -143,6 +144,7 @@ namespace Client.Pages.ProductManagers
         }
         protected async Task EditProduct(int productID)
         {
+            editFunction = true;
             productModel = await productServices.GetProductById(productID);
         }
 
@@ -178,6 +180,15 @@ namespace Client.Pages.ProductManagers
             await LoadProducts(currentPage, pageSize, searchTerm);
 
         }
-
+        private void ClearData()
+        {
+            editFunction = false;
+            productModel = new();
+        }
+        private void CreateFunction()
+        {
+            editFunction = false;
+            productModel = new();
+        }
     }
 }

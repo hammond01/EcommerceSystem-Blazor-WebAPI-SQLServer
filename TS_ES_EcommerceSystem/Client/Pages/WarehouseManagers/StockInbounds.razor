@@ -18,14 +18,13 @@ else
             <div class="row">
                 <div class="input-group mb-3">
                     <span class="input-group-text">Lô sản phẩm</span>
-                    <RadzenDropDown AllowClear="true"
-                                    TValue="int" @bind-Value="stockInboundModel!.ProductionBatchID" Placeholder="Chọn lô sản phẩm"
-                                    Change=@OnChangeProductBath
-                                    AllowFiltering="true"
-                                    Data="@(productionBatches.AsQueryable())" TextProperty="ProductionBatchName" ValueProperty="ProductionBatchID"
-                                    Style="width: 100%; max-width: 362px;" />
+                    <RadzenDropDown AllowClear="true" TValue="int" @bind-Value="stockInboundModel!.ProductionBatchID"
+                        Placeholder="Chọn lô sản phẩm" Change=@OnChangeProductBath AllowFiltering="true"
+                        Data="@(productionBatches.AsQueryable())" TextProperty="ProductionBatchName"
+                        ValueProperty="ProductionBatchID" Style="width: 100%; max-width: 362px;" />
                     <span class="input-group-text">Số lượng nhập</span>
-                    <input @bind="@stockInboundModel!.QuantityInbound" type="number" class="form-control" @oninput="CalculateEstimatedPrice">
+                    <input @bind="@stockInboundModel!.QuantityInbound" type="number" class="form-control"
+                        @oninput="CalculateEstimatedPrice">
                     <span class="input-group-text">đơn vị tính bằng lô</span>
                 </div>
                 <div class="colunm input-group input-group-sm mb-3">
@@ -41,7 +40,8 @@ else
                 </div>
                 <div class="colunm input-group input-group-sm mb-3">
                     <label class="input-group-text">Ghi chú</label>
-                    <textarea @bind="@stockInboundModel.Note" style="min-height:110px;" type="text" class="form-control"></textarea>
+                    <textarea @bind="@stockInboundModel.Note" style="min-height:110px;" type="text"
+                        class="form-control"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="ClearData">Trở lại</button>
@@ -63,17 +63,25 @@ else
         </div>
     </div>
     <hr />
-    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="@pageSize" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@informationStockInbounds.AsQueryable()" TItem="@InformationStockInboundFromWarehouse" AllowFiltering="true" FilterMode="FilterMode.Simple"
-                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
+    <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="@pageSize" AllowPaging="true"
+        PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@informationStockInbounds.AsQueryable()"
+        TItem="@InformationStockInboundFromWarehouse" AllowFiltering="true" FilterMode="FilterMode.Simple"
+        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
         <Columns>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" TextAlign="TextAlign.Center" Property="ProductionBatchName" Title="Số lô" Width="100px"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="UnitName" Title="Phân loại" Width="120px"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="QuantityInbound" Title="Số lượng lô nhập"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="FormattedCostPrice" Title="Giá tạm tính"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="Note" Title="Ghi chú"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="DateInbound" Title="Ngày nhập"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Title="Thao tác" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" TextAlign="TextAlign.Center"
+                Property="ProductionBatchName" Title="Số lô" Width="100px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="UnitName" Title="Phân loại"
+                Width="120px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="QuantityInbound"
+                Title="Số lượng lô nhập"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="FormattedCostPrice"
+                Title="Giá tạm tính"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="Note" Title="Ghi chú">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Property="DateInbound" Title="Ngày nhập">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@InformationStockInboundFromWarehouse" Title="Thao tác"
+                TextAlign="TextAlign.Center">
                 <Template Context="data">
                     <a class="w-20 btn btn-success mx-2 my-auto" @onclick="() => GetStockInbound(data.InboundID)">
                         <span class="bi bi-pencil mx-1" aria-hidden="true"> </span>
@@ -81,7 +89,8 @@ else
                     <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => Delete(data.InboundID)">
                         <span class="bi bi-trash mx-1" aria-hidden="true"> </span>
                     </a>
-                    <a class="w-20 btn btn-warning mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#detailStockInBoundModal" @onclick="() => DetaiInbound(data.InboundID)">
+                    <a class="w-20 btn btn-warning mx-2 my-auto" data-bs-toggle="modal"
+                        data-bs-target="#detailStockInBoundModal" @onclick="() => DetaiInbound(data.InboundID)">
                         <span class="bi bi-info-square mx-1" aria-hidden="true"> </span>
                     </a>
                 </Template>
@@ -90,7 +99,8 @@ else
     </RadzenDataGrid>
     @if (stockInboundModel is not null && openDetailDialog)
     {
-        <div class="modal fade" id="detailStockInBoundModal" tabindex="-1" aria-labelledby="detailStockInBoundModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailStockInBoundModal" tabindex="-1" aria-labelledby="detailStockInBoundModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -101,7 +111,8 @@ else
                         <form>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">Tên lô sản phẩm:</label>
-                                <label for="recipient-name" class="col-form-label">@stockInboundModel!.ProductionBatch.ProductionBatchName</label>
+                                <label for="recipient-name"
+                                    class="col-form-label">@stockInboundModel!.ProductionBatch.ProductionBatchName</label>
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">Ngày nhập kho:</label>
@@ -109,11 +120,13 @@ else
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">.................................</label>
-                                <label for="recipient-name" class="col-form-label">...................................................................</label>
+                                <label for="recipient-name"
+                                    class="col-form-label">...................................................................</label>
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">.................................</label>
-                                <label for="recipient-name" class="col-form-label">...................................................................</label>
+                                <label for="recipient-name"
+                                    class="col-form-label">...................................................................</label>
                             </div>
                         </form>
                     </div>

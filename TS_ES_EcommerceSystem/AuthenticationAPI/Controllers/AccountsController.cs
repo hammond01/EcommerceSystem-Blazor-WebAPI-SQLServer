@@ -2,6 +2,7 @@
 using AuthenticationAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.ResponseModel;
 
 namespace AuthenticationAPI.Controllers
 {
@@ -28,7 +29,7 @@ namespace AuthenticationAPI.Controllers
         /// </summary>
         /// <param name="register">The user account information.</param>
         /// <returns>A <see cref="IActionResult"/> indicating whether the operation succeeded.</returns>
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(Register register)
         {
             /// <summary>
@@ -37,11 +38,12 @@ namespace AuthenticationAPI.Controllers
             /// <param name="register">The user account information.</param>
             /// <returns>A <see cref="IActionResult"/> indicating whether the operation succeeded.</returns>
             var result = await repo.Register(register);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(result.Succeeded);
+                var errors = result.Errors.Select(x => x.Description);
+                return Ok(new RegisterResponse { Successful = false, Errors = errors });
             }
-            return BadRequest();
+            return Ok(new RegisterResponse { Successful = true });
         }
 
         /// <summary>

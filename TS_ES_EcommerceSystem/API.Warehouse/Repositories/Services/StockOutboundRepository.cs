@@ -102,11 +102,11 @@ namespace API.Warehouse.Repositories.Services
         {
             try
             {
-                var query = @"UPDATE StockOutbound SET 
-                                DateOutbound = @DateOutbound, 
-                                ProductionBatchID = @ProductionBatchID, 
-                                QuantityOutbound = @QuantityOutbound, 
-                                Note = @Note 
+                var query = @"UPDATE StockOutbound SET
+                                DateOutbound = @DateOutbound,
+                                ProductionBatchID = @ProductionBatchID,
+                                QuantityOutbound = @QuantityOutbound,
+                                Note = @Note
                                     WHERE OutboundID = @OutboundID;";
                 stockOutbound.OutboundID = id;
                 await Program.Sql.ExecuteAsync(query, stockOutbound);
@@ -178,7 +178,7 @@ namespace API.Warehouse.Repositories.Services
                                 LEFT JOIN Products p ON pb.ProductID = p.ProductID
                                 LEFT JOIN Units u ON pb.UnitID = u.UnitID
                             WHERE
-                                w.WareHouseID = 1
+                                w.WareHouseID = @id
                                 AND dw.ActualWarehouse > 0";
                 var res = await Program.Sql.QueryAsync<WarehouseResponse>(query, new { id });
                 return new

@@ -74,6 +74,16 @@ builder.Services.AddAuthentication(h =>
 {
     h.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
 });*/
+// Add Cors ALL Option
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"))
@@ -119,6 +129,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

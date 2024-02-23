@@ -3,9 +3,9 @@
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="()=> GetProducts()" data-bs-target="#addModal">
-    Add product batch
+    Thêm một lô sản phẩm mới
 </button>
-<h1>Production batch manager</h1>
+<h1>Danh sách lô sản phẩm hiện có</h1>
 <hr />
 @if (productionBatches is null || products is null)
 {
@@ -17,19 +17,20 @@ else
                     Data="@productionBatches.AsQueryable()" TItem="@ProductBathResponse" ColumnWidth="150px" AllowFiltering="true" FilterMode="FilterMode.Simple"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive">
         <Columns>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ProductionBatch.ProductionBatchName" Title="Product batch number" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Products.ProductName" Title="Product Name"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Quantity" Title="Quantity" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="PriceOfBatch" Title="Price Of Batch" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ManufactureDate" Title="Manufacture date"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ExpiryDate" Title="Expiry date"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="@ProductBathResponse" Title="Actions" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ProductionBatch.ProductionBatchName" Title="Số lô" Width="100px" TextAlign="TextAlign.Center"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Products.ProductName" Title="Tên sản phẩm"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="Quantity" Title="Số lượng trong một lô" TextAlign="TextAlign.End" Width="120px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="PriceOfBatch" Title="Giá tiền" TextAlign="TextAlign.End" Width="75px"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ManufactureDate" Title="Ngày sản xuất"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Property="ExpiryDate" Title="Ngày hết hạn"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="@ProductBathResponse" Title="Tùy chọn" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <a class="w-20 btn btn-success mx-2 my-auto" @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
-                        <span class="bi bi-pencil mx-1" aria-hidden="true"> Edit</span>
+                    <a class="w-20 btn btn-success mx-2 my-auto" data-bs-toggle="modal" data-bs-target="#addModal"
+                         @onclick="() => GetProductBatchByProductionBatchID(data.ProductionBatchID)">
+                        <span class="bi bi-pencil mx-1" aria-hidden="true"> </span>
                     </a>
                     <a class="w-20 btn btn-danger mx-2 my-auto" @onclick="() => DeleteProductbatch(data.ProductionBatchID)">
-                        <span class="bi bi-trash mx-1" aria-hidden="true"> Delete</span>
+                        <span class="bi bi-trash mx-1" aria-hidden="true"> </span>
                     </a>
                 </Template>
             </RadzenDataGridColumn>
@@ -39,13 +40,13 @@ else
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">@((addProductionBatch == true ? "Add" : "Edit") + " product batch")</h5>
+                    <h5 class="modal-title" id="addModalLabel">@((addProductionBatch == true ? "Thêm mới" : "Chỉnh sửa") + " lô sản phẩm")</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <EditForm Model="@productionBatchModel" OnSubmit="@CreateProductionBatch" FormName="ProductionBatch">
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text" for="Product">Product</label>
+                            <label class="input-group-text" style="width:150px;" for="Product">Tên sản phẩm</label>
                             <select class="form-select" id="Product" @bind="@productionBatchModel!.ProductID">
                                 <option selected>
                                     Choose...
@@ -57,7 +58,7 @@ else
                             </select>
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text" for="Product">Product</label>
+                            <label class="input-group-text" style="width:150px;" for="Product">Đơn vị của lô</label>
                             <select class="form-select" id="Product" @bind="@productionBatchModel!.UnitID">
                                 <option selected>
                                     Choose...
@@ -69,15 +70,16 @@ else
                             </select>
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Quantity</label>
+                            <label class="input-group-text" style="width:150px;">Số lượng theo đơn vị</label>
                             <input @bind="@productionBatchModel.Quantity" type="number" class="form-control">
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Price Of Batch</label>
+                            <label class="input-group-text" style="width:150px;">Giá nhập</label>
                             <input @bind="@productionBatchModel.PriceOfBatch" type="number" class="form-control">
+                            <label class="input-group-text" style="width:50px;">VND</label>
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Manufacture Date</label>
+                            <label class="input-group-text" style="width:150px;">Ngày sản xuất</label>
                             <input @bind="@productionBatchModel.ManufactureDate" type="datetime-local" class="form-control" @oninput="HandleManufactureDateChange">
                         </div>
                         @if (!string.IsNullOrEmpty(CheckManufactureDate))
@@ -85,7 +87,7 @@ else
                             <div class="alert alert-danger">@CheckManufactureDate</div>
                         }
                         <div class="input-group input-group-sm mb-3">
-                            <label class="input-group-text">Expiry Date</label>
+                            <label class="input-group-text" style="width:150px;">Ngày hết hạn</label>
                             <input @bind="@productionBatchModel.ExpiryDate" type="datetime-local" class="form-control" @oninput="HandleExpiryDateChange">
                         </div>
                         @if (!string.IsNullOrEmpty(CheckExpiryDate))
@@ -94,8 +96,8 @@ else
                         }
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Close</button>
-                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit" disabled="@IsButtonDisabled">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearData">Đóng</button>
+                            <button class="btn btn-primary" data-bs-dismiss="modal" type="submit" disabled="@IsButtonDisabled">Lưu</button>
                         </div>
                     </EditForm>
                 </div>
