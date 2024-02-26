@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models.ElasticsearchModel;
 using Models.RequestModel;
 using Server.Repositories.Interfaces;
 
 namespace Server.Controllers
 {
+    [Authorize]
     public class ProductsController(IProductsServices _repo, ILogger<ProductsController> _logger, IMessageProducer _messagePublisher) : ConBase
     {
         [HttpGet("Gets")]
@@ -113,7 +115,7 @@ namespace Server.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(int id, ProductRequest product)
         {
             try
@@ -134,7 +136,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             try

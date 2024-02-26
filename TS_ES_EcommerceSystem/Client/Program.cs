@@ -3,7 +3,6 @@ using Client;
 using Client.Helpers;
 using Client.Services;
 using CurrieTechnologies.Razor.SweetAlert2;
-using Elasticsearch.Net;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -12,6 +11,7 @@ using Radzen;
 class Program
 {
     public static HttpClient httpClient = default!;
+    public static HttpClient httpClient_server = default!;
     public static HttpClient httpClient_auth = default!;
     public static async Task Main(string[] args)
     {
@@ -25,7 +25,11 @@ class Program
         };
         httpClient_auth = new HttpClient
         {
-            BaseAddress = new Uri("https://localhost:7253/api/")
+            BaseAddress = new Uri("https://localhost:7253")
+        };
+        httpClient_server = new HttpClient
+        {
+            BaseAddress = new Uri("https://localhost:7297/api/")
         };
 
         builder.Services.AddScoped(sp =>

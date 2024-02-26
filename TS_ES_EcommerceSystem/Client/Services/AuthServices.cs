@@ -22,7 +22,7 @@ namespace Client.Services
         }
         public async Task<LoginResponse> Login(LoginRequest obj)
         {
-            var result = await Program.httpClient_auth.PostAsJsonAsync("Accounts/Login", obj);
+            var result = await Program.httpClient_auth.PostAsJsonAsync("/api/Accounts/Login", obj);
             var jsonString = await result.Content.ReadAsStringAsync();
             var loginResponse = JsonSerializer.Deserialize<LoginResponse>(jsonString,
                 new JsonSerializerOptions()
@@ -35,7 +35,7 @@ namespace Client.Services
             }
             await _localStorage.SetItemAsync("authToken", loginResponse!.Data);
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(obj.Email!);
-            Program.httpClient_auth.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Data);
+            Program.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Data);
             return loginResponse;
         }
         public async Task LogOut()
@@ -43,6 +43,7 @@ namespace Client.Services
             await _localStorage.RemoveItemAsync("authToken");
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
             Program.httpClient_auth.DefaultRequestHeaders.Authorization = null;
+            Program.httpClient_server.DefaultRequestHeaders.Authorization = null;
         }
     }
 }

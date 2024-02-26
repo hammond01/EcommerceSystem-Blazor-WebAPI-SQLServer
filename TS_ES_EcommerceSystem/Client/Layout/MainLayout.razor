@@ -18,10 +18,11 @@
             <AuthorizeView>
                 <Authorized>
                     Hello, ADMIN
-                    <a href="/logout">Logout</a>
+                    <a href="/logout">Đăng xuất</a>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="/login" class="ml-md-auto">Login</a>
+                    <a href="/login" class="ml-md-auto" @onclick="()=>ShowRegister(false)">Đăng nhập</a>
+                    <a href="/register" class="ml-md-auto" @onclick="()=>ShowRegister(true)">Đăng ký</a>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
@@ -31,9 +32,24 @@
                     @Body
                 </Authorized>
                 <NotAuthorized>
-                    <Login></Login>
+                    @if (showRegister)
+                    {
+                        <Register></Register>
+                    }
+                    else
+                    {
+                        <Login></Login>
+                    }
                 </NotAuthorized>
             </AuthorizeView>
         </article>
     </main>
 </div>
+@code {
+    bool showRegister = false;
+
+    void ShowRegister(bool show)
+    {
+        showRegister = show;
+    }
+}
