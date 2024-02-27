@@ -2,15 +2,6 @@
 
 <h1>Đăng ký</h1>
 
-@if (ShowErrors)
-{
-    <div class="alert alert-danger" role="alert">
-        @foreach (var error in Errors!)
-        {
-            <p>@error</p>
-        }
-    </div>
-}
 <div class="card">
     <div class="card-body">
         <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
@@ -42,7 +33,7 @@
                            @bind-Value="RegisterModel.ConfirmPassword" />
                 <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            <button type="submit" class="btn btn-primary mt-2">Gửi</button>
         </EditForm>
     </div>
 </div>

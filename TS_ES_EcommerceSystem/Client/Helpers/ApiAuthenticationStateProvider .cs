@@ -17,6 +17,7 @@ namespace Client.Helpers
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var savedToken = await _localStorage.GetItemAsync<string>("authToken");
+            //var savedRole = await _localStorage.GetItemAsync<string>("roleAuth");
 
             if (string.IsNullOrWhiteSpace(savedToken))
             {

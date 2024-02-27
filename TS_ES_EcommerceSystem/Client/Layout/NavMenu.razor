@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Client</a>
+        <a class="navbar-brand" href="">ADMIN</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -68,11 +68,18 @@
             </NavLink>
             @if (ShowProduct)
             {
-                <a class="nav-link text-white" href="product" style="margin-left:5rem; visibility:visible;">
+                <a class="nav-link text-white" href="product" style="margin-left:3rem; visibility:visible;">
                     <div class="hstack">
                         <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true"
                               style="margin-top:-2rem;"></span>
                         <span>Sản phẩm</span>
+                    </div>
+                </a>
+                <a class="nav-link text-white" href="productdiscontinued" style="margin-left:3rem; visibility:visible;">
+                    <div class="hstack">
+                        <span class="bi bi-caret-right-fill fs-5 text-center" aria-hidden="true"
+                              style="margin-top:-2rem;"></span>
+                        <span>Sản phẩm ngừng KD</span>
                     </div>
                 </a>
             }
@@ -98,4 +105,5 @@
     {
         ShowProduct = !ShowProduct;
     }
+
 }

@@ -5,12 +5,12 @@ namespace Client.Pages.Authentication
     public partial class Register
     {
         private RegisterRequest RegisterModel = new RegisterRequest();
-        private bool ShowErrors;
-        private IEnumerable<string>? Errors;
+        //private bool ShowErrors;
+        //private IEnumerable<string>? Errors;
 
         private void HandleRegistration()
         {
-            ShowErrors = false;
+            //ShowErrors = false;
             // var result = await AuthService.Register(RegisterModel);
 
             // if (result.Successful)

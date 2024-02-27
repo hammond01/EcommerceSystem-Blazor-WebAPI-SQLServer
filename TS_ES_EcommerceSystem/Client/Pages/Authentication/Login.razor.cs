@@ -1,4 +1,4 @@
-using Client.Services;
+﻿using Client.Services;
 using Microsoft.AspNetCore.Components;
 using Models.RequestModel;
 
@@ -18,13 +18,13 @@ namespace Client.Pages.Authentication
 
             var result = await authServices.Login(loginModel);
 
-            if (result.Status == 200)
+            if (result)
             {
                 NavigationManager.NavigateTo("/");
             }
             else
             {
-                Error = result.Message!;
+                Error = "Gặp sự cố khi đăng nhập từ phía máy chủ";
                 ShowErrors = true;
             }
         }

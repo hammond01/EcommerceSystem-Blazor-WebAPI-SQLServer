@@ -1,6 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization;
-@using Client.Pages.Authentication;
 <div class="page">
     <AuthorizeView>
         <Authorized>
@@ -15,9 +13,9 @@
     <RadzenNotification />
     <main>
         <div class="top-row px-4">
-            <AuthorizeView>
+            <AuthorizeView Context="_connected">
                 <Authorized>
-                    Hello, ADMIN
+                    Hello, @_connected.User.Identity!.Name
                     <a href="/logout">Đăng xuất</a>
                 </Authorized>
                 <NotAuthorized>
