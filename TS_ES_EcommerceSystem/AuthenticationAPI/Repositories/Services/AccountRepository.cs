@@ -3,6 +3,7 @@ using AuthenticationAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Models.ResponseModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -33,10 +34,15 @@ namespace AuthenticationAPI.Repositories.Services
         /// </summary>
         /// <param name="register">The register information.</param>
         /// <returns>The result of the registration process.</returns>
-        public async Task<IdentityResult> Register(Register register)
+        public async Task<RegisterResponse> Register(Register register)
         {
             try
             {
+                var existingUser = await userManager.FindByEmailAsync(register.Email);
+                if (existingUser != null)
+                {
+                    return new RegisterResponse { Successful = false, Errors = new List<string> { "Email is already taken" } };
+                }
                 // create a new user
                 var user = new ApplicationUser
                 {
@@ -52,7 +58,7 @@ namespace AuthenticationAPI.Repositories.Services
                 {
                     await userManager.AddToRoleAsync(user, Roles.Customer);
                 }
-                return result;
+                return new RegisterResponse { Successful = true };
             }
             catch (Exception ex)
             {
@@ -83,12 +89,14 @@ namespace AuthenticationAPI.Repositories.Services
                 var userRole = await userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
-            {
-            new Claim(ClaimTypes.Email, login.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
+                                            {
+                                            new Claim(ClaimTypes.Email, login.Email),
+                                            new Claim(ClaimTypes.Name, login.Email),
+                                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                                            };
                 foreach (var role in userRole)
                 {
+                    //authClaims.Add(new Claim("Role", role.ToString()));
                     authClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
                 }
 

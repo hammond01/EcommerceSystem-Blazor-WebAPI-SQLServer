@@ -71,7 +71,7 @@ namespace API.Warehouse.Controllers
             }
         }
         [HttpPut("Update/{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> UpdateWarehouse(int id, WareHouse warehouse)
         {
             try
@@ -92,7 +92,7 @@ namespace API.Warehouse.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteWarehouse(int id)
         {
             try

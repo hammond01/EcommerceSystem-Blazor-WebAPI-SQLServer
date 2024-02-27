@@ -1,0 +1,39 @@
+﻿@page "/Register"
+
+<h1>Đăng ký</h1>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="email">Địa chỉ email</label>
+                <InputText Id="email" class="form-control" @bind-Value="RegisterModel.Email" />
+                <ValidationMessage For="@(() => RegisterModel.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="firstName">Họ</label>
+                <InputText Id="firstName" class="form-control" @bind-Value="RegisterModel.FirstName" />
+                <ValidationMessage For="@(() => RegisterModel.FirstName)" />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Tên</label>
+                <InputText Id="lastName" class="form-control" @bind-Value="RegisterModel.LastName" />
+                <ValidationMessage For="@(() => RegisterModel.LastName)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.Password" />
+                <ValidationMessage For="@(() => RegisterModel.Password)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Nhập lại mật khẩu</label>
+                <InputText Id="password" type="password" class="form-control"
+                           @bind-Value="RegisterModel.ConfirmPassword" />
+                <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Gửi</button>
+        </EditForm>
+    </div>
+</div>

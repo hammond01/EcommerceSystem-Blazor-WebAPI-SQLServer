@@ -1,16 +1,53 @@
 ﻿@inherits LayoutComponentBase
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+
     <RadzenNotification />
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <AuthorizeView Context="_connected">
+                <Authorized>
+                    Hello, @_connected.User.Identity!.Name
+                    <a href="/logout">Đăng xuất</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/login" class="ml-md-auto" @onclick="()=>ShowRegister(false)">Đăng nhập</a>
+                    <a href="/register" class="ml-md-auto" @onclick="()=>ShowRegister(true)">Đăng ký</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
-
         <article class="content px-4">
-            @Body
+            <AuthorizeView>
+                <Authorized>
+                    @Body
+                </Authorized>
+                <NotAuthorized>
+                    @if (showRegister)
+                    {
+                        <Register></Register>
+                    }
+                    else
+                    {
+                        <Login></Login>
+                    }
+                </NotAuthorized>
+            </AuthorizeView>
         </article>
     </main>
 </div>
+@code {
+    bool showRegister = false;
+
+    void ShowRegister(bool show)
+    {
+        showRegister = show;
+    }
+}

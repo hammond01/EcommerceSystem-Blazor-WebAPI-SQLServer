@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models.ElasticsearchModel;
 using Models.RequestModel;
 using Server.Repositories.Interfaces;
@@ -15,6 +16,44 @@ namespace Server.Controllers
                 _logger.LogInformation($"Attempting to get products with page = {page}, pageSize = {pageSize}, productName = {productName}");
 
                 var res = await _repo.GetProducts(page, pageSize, productName);
+
+                _logger.LogInformation($"Successfully retrieved products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting products with page = {page}, pageSize = {pageSize}, productName = {productName}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("get-product-continued")]
+        public async Task<IActionResult> GetProductsContinued(int page = 1, int pageSize = 10, string productName = "")
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to get products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
+                var res = await _repo.GetProductContinued(page, pageSize, productName);
+
+                _logger.LogInformation($"Successfully retrieved products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while getting products with page = {page}, pageSize = {pageSize}, productName = {productName}: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+        [HttpGet("get-product-discontinued")]
+        public async Task<IActionResult> GetProductDisContinued(int page = 1, int pageSize = 10, string productName = "")
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to get products with page = {page}, pageSize = {pageSize}, productName = {productName}");
+
+                var res = await _repo.GetProductDisContinued(page, pageSize, productName);
 
                 _logger.LogInformation($"Successfully retrieved products with page = {page}, pageSize = {pageSize}, productName = {productName}");
 
@@ -96,7 +135,6 @@ namespace Server.Controllers
 
                 _logger.LogInformation($"Successfully add product");
 
-                //Send msg to RabbitMQ
                 var msgModel = new EProduct
                 {
                     ProductID = product.ProductID,
@@ -104,7 +142,6 @@ namespace Server.Controllers
                     UnitPrice = product.UnitPrice,
                 };
                 _messagePublisher.SendMessage(msgModel, "Products", "add");
-
                 return Ok(res);
             }
             catch (Exception ex)
@@ -115,7 +152,7 @@ namespace Server.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(int id, ProductRequest product)
         {
             try
@@ -136,14 +173,14 @@ namespace Server.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        //[Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteProduct(int id, bool reIntroduce)
         {
             try
             {
                 _logger.LogInformation($"Attempting to delete product with productID {id}");
 
-                var data = await _repo.DeleteProduct(id);
+                var data = await _repo.DeleteProduct(id, reIntroduce);
 
                 _logger.LogInformation($"Successfully delete product with productID {id}");
 

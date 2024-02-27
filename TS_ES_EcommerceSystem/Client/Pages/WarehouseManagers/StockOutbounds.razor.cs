@@ -26,7 +26,7 @@ namespace Client.Pages.WarehouseManagers
         #region ListData
         private List<ProductBathResponse> productionBatches { get; set; } = default!;
         private List<InformationStockOutboundFromWarehouse> informationStockOutbounds { get; set; } = default!;
-        private List<WarehouseResponse> listWarehouseResponses { get; set; } = new List<WarehouseResponse>();
+        private List<WarehouseResponse> listWarehouseResponses { get; set; } = default!;
         #endregion
         #region Inject
         [Inject]
@@ -59,6 +59,7 @@ namespace Client.Pages.WarehouseManagers
         ProductBathResponse? productionBatchModel { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            listWarehouseResponses = new List<WarehouseResponse>();
             informationStockOutboundModel ??= new();
             warehouseResponseModel ??= new();
             stockOutBoundModel ??= new();

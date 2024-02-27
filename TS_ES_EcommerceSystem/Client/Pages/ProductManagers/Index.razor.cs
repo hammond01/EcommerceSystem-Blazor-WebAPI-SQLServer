@@ -14,6 +14,7 @@ namespace Client.Pages.ProductManagers
         private int pageSize = 10;
         private string searchTerm = "";
         private int totalPage;
+        private bool editFunction;
 
         [SupplyParameterFromForm]
         Models.Products? productModel { get; set; }
@@ -75,24 +76,15 @@ namespace Client.Pages.ProductManagers
             }
             else
             {
-                // Update product
                 var update = await productServices.UpdateProduct(productModel);
-                if (update == true)
+                if (update)
                 {
-                    await Swal.FireAsync(
-                                            "Updated",
-                                            "Product has been Updated.",
-                                             SweetAlertIcon.Success
-                                        );
+                    await Swal.FireAsync("Chỉnh sửa", "Chỉnh sửa thông tin sản phẩm thành công.", SweetAlertIcon.Success);
                     await LoadProducts(currentPage, pageSize, searchTerm);
                 }
                 else
                 {
-                    await Swal.FireAsync(
-                                            "Error",
-                                            "Product hasn't been Updated.",
-                                            SweetAlertIcon.Error
-                                        );
+                    await Swal.FireAsync("Lỗi", "Có lỗi xảy ra ở phía máy chủ.", SweetAlertIcon.Error);
                 }
             }
 
@@ -101,48 +93,36 @@ namespace Client.Pages.ProductManagers
         {
             SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
             {
-                Title = "Are you sure?",
-                Text = "You will not be able to recover this imaginary file!",
+                Title = "Hmmm?",
+                Text = "Bạn có chắc là không còn kinh doanh sản phẩm này nữa!",
                 Icon = SweetAlertIcon.Warning,
                 ShowCancelButton = true,
-                ConfirmButtonText = "Yes, delete it!",
-                CancelButtonText = "No, keep it"
+                ConfirmButtonText = "Xác nhận",
+                CancelButtonText = "Giữ nó lại."
             });
 
             if (!string.IsNullOrEmpty(result.Value))
             {
-                var res = await productServices.DeleteProduct(id);
+                var res = await productServices.DeleteProduct(id, true);
 
-
-                if (res == "Deleted")
+                if (res)
                 {
-                    await Swal.FireAsync(
-                                             "Deleted",
-                                             "Product has been deleted.",
-                                             SweetAlertIcon.Success
-                                        );
+                    await Swal.FireAsync("Thành công", "Sản phẩm đã được đưa tới danh sách không còn kinh doanh.", SweetAlertIcon.Success);
                     await LoadProducts(currentPage, pageSize, searchTerm);
                 }
                 else
                 {
-                    await Swal.FireAsync(
-                                             "Deleted",
-                                             "Product hasn't been deleted.",
-                                             SweetAlertIcon.Error
-                                        );
+                    await Swal.FireAsync("Lỗi", "Có lỗi xảy ra ở máy chủ.", SweetAlertIcon.Error);
                 }
             }
             else if (result.Dismiss == DismissReason.Cancel)
             {
-                await Swal.FireAsync(
-                                          "Cancelled",
-                                          "Product is safe :)",
-                                          SweetAlertIcon.Error
-                                    );
+                await Swal.FireAsync("Hủy", "Sản phẩm sẽ được giữ lại :)", SweetAlertIcon.Error);
             }
         }
         protected async Task EditProduct(int productID)
         {
+            editFunction = true;
             productModel = await productServices.GetProductById(productID);
         }
 
@@ -178,6 +158,15 @@ namespace Client.Pages.ProductManagers
             await LoadProducts(currentPage, pageSize, searchTerm);
 
         }
-
+        private void ClearData()
+        {
+            editFunction = false;
+            productModel = new();
+        }
+        private void CreateFunction()
+        {
+            editFunction = false;
+            productModel = new();
+        }
     }
 }

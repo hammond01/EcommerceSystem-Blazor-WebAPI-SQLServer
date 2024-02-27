@@ -15,7 +15,6 @@ namespace Server.Repositories.Services
             {
                 channel.QueueDeclare(queue: "ServerAPI", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-                // Thêm trường "Action" vào đối tượng message
                 var messageWithAction = new
                 {
                     Action = action,
@@ -32,6 +31,5 @@ namespace Server.Repositories.Services
                 Console.WriteLine($" [x] Sent {message}");
             }
         }
-
     }
 }

@@ -6,14 +6,9 @@ namespace Client.Services
 {
     public class CategoryServices
     {
-        private readonly HttpClient _client;
-        public CategoryServices(HttpClient client)
-        {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
         public async Task<List<Categories>> GetCategories()
         {
-            var request = await _client.GetAsync($"v1/Category/gets");
+            var request = await Program.httpClient_server.GetAsync($"v1/Category/gets");
 
             if (request.IsSuccessStatusCode)
             {

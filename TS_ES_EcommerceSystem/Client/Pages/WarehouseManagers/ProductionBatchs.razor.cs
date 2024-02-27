@@ -11,19 +11,16 @@ namespace Client.Pages.WarehouseManagers
     public partial class ProductionBatchs
     {
         #region Variable
-        private string ErrorMessage { get; set; } = default!;
         private bool IsButtonDisabled = true;
         private bool addProductionBatch = false;
         private string CheckManufactureDate { get; set; } = default!;
         private string CheckExpiryDate { get; set; } = default!;
         #endregion
-
         #region ListData
         private List<ProductBathResponse> productionBatches { get; set; } = default!;
         private List<Products>? products { get; set; } = default!;
         private List<Units>? units { get; set; } = default!;
         #endregion
-
         #region Inject
         [Inject]
         protected ProductServices productServices { get; set; } = default!;
@@ -34,7 +31,6 @@ namespace Client.Pages.WarehouseManagers
         [Inject]
         protected SweetAlertService Swal { get; set; } = default!;
         #endregion
-
         [SupplyParameterFromForm]
         ProductBathResponse? productionBatchModel { get; set; }
         protected override async Task OnInitializedAsync()
@@ -44,73 +40,51 @@ namespace Client.Pages.WarehouseManagers
             productionBatchModel.ManufactureDate = DateTime.Now;
             await GetProductBatchs();
         }
-
         #region Create, Edit and Delete
         protected async Task CreateProductionBatch()
         {
-
             if (productionBatchModel!.ProductionBatchID == 0)
             {
-                //create new product
                 var data = new ProductionBatch
                 {
                     ProductID = productionBatchModel.ProductID,
                     UnitID = productionBatchModel.UnitID,
                     ProductionBatchName = "",
                     Quantity = productionBatchModel.Quantity,
+                    PriceOfBatch = productionBatchModel.PriceOfBatch,
                     ManufactureDate = productionBatchModel.ManufactureDate,
                     ExpiryDate = productionBatchModel.ExpiryDate,
                 };
                 var res = await productionBatchServices.CreateProductionBatch(data);
-
-                if (res == "Created")
+                if (res)
                 {
-                    await Swal.FireAsync(
-                     "Create",
-                     "Created!",
-                     SweetAlertIcon.Success
-                     );
+                    await Swal.FireAsync("Create", "Created!", SweetAlertIcon.Success);
                     await GetProductBatchs();
-
                 }
                 else
                 {
-                    await Swal.FireAsync(
-                     "Cancelled",
-                     "Create is safe :)",
-                     SweetAlertIcon.Error
-                     );
+                    await Swal.FireAsync("Cancelled", "Create is safe :)", SweetAlertIcon.Error);
                 }
             }
             else
             {
-                // Update product
                 var update = await productionBatchServices.UpdateProductionBatch(productionBatchModel);
                 if (update == true)
                 {
-                    await Swal.FireAsync(
-                                            "Updated",
-                                            "Updated.",
-                                             SweetAlertIcon.Success
-                                        );
+                    await Swal.FireAsync("Updated", "Updated.", SweetAlertIcon.Success);
                     await GetProductBatchs();
                 }
                 else
                 {
-                    await Swal.FireAsync(
-                                            "Error",
-                                            "Error",
-                                            SweetAlertIcon.Error
-                                        );
+                    await Swal.FireAsync("Error", "Error", SweetAlertIcon.Error);
                 }
             }
-
         }
         protected async Task DeleteProductbatch(int id)
         {
             SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
             {
-                Title = "Are you sure?",
+                Title = "Bạn có chắn chắn xóa chứ?",
                 Text = "You will not be able to recover this imaginary file!",
                 Icon = SweetAlertIcon.Warning,
                 ShowCancelButton = true,
@@ -123,35 +97,22 @@ namespace Client.Pages.WarehouseManagers
                 var res = await productionBatchServices.DeleteProductionBatch(id);
 
 
-                if (res == "Deleted")
+                if (res)
                 {
-                    await Swal.FireAsync(
-                                             "Deleted",
-                                             "Product has been deleted.",
-                                             SweetAlertIcon.Success
-                                        );
+                    await Swal.FireAsync("Deleted", "Product has been deleted.", SweetAlertIcon.Success);
                     await GetProductBatchs();
                 }
                 else
                 {
-                    await Swal.FireAsync(
-                                             "Deleted",
-                                             "Product hasn't been deleted.",
-                                             SweetAlertIcon.Error
-                                        );
+                    await Swal.FireAsync("Deleted", "Product hasn't been deleted.", SweetAlertIcon.Error);
                 }
             }
             else if (result.Dismiss == DismissReason.Cancel)
             {
-                await Swal.FireAsync(
-                                          "Cancelled",
-                                          "Product is safe :)",
-                                          SweetAlertIcon.Error
-                                    );
+                await Swal.FireAsync("Cancelled", "Product is safe :)", SweetAlertIcon.Error);
             }
         }
         #endregion
-
         #region Get endpoint
         protected async Task GetProductBatchByProductionBatchID(int id)
         {
@@ -193,7 +154,6 @@ namespace Client.Pages.WarehouseManagers
                 IsButtonDisabled = false;
             }
         }
-
         private void HandleExpiryDateChange(ChangeEventArgs e)
         {
             if (!DateTime.TryParse(e.Value!.ToString(), out DateTime selectedDate) ||
@@ -214,7 +174,6 @@ namespace Client.Pages.WarehouseManagers
                 IsButtonDisabled = false;
             }
         }
-
         #endregion
         private void ClearData()
         {

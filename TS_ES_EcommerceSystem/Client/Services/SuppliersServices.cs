@@ -6,14 +6,9 @@ namespace Client.Services
 {
     public class SuppliersServices
     {
-        private readonly HttpClient _client;
-        public SuppliersServices(HttpClient client)
-        {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
         public async Task<List<Suppliers>> GetSuppliers()
         {
-            var request = await _client.GetAsync($"v1/Suppliers/gets");
+            var request = await Program.httpClient_server.GetAsync($"v1/Suppliers/gets");
 
             if (request.IsSuccessStatusCode)
             {
