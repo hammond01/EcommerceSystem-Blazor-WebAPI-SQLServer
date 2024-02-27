@@ -1,0 +1,60 @@
+﻿@page "/productDiscontinued"
+<h1 class="text-center">Danh sách sản phẩm đã ngừng kinh doanh</h1>
+<div>
+    <input type="text" @bind="searchTerm" placeholder="Tìm kiếm" />
+    <button @onclick="Search">Tìm kiếm theo tên</button>
+</div>
+<hr />
+@if (products is null)
+{
+    <p><em>Loading....!</em></p>
+}
+else
+{
+    <table class="table table-striped table-hover table-responsive table-responsive-sm w-100">
+        <thead class="table-light">
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Loại</th>
+                <th>Công ty sản xuất</th>
+                <th style="max-width: 200px">Số lượng trên mỗi sản phẩm</th>
+                <th>Giá tiền</th>
+                <AuthorizeView Roles="Administrator">
+                    <Authorized>
+                        <th class="text-center">Tùy chọn</th>
+                    </Authorized>
+                    <NotAuthorized>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products!)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>@product.Categories!.CategoryName</td>
+                    <td>@product.Suppliers!.CompanyName</td>
+                    <td style="max-width: 200px">@product.QuantityPerUnit</td>
+                    <td>@product.UnitPrice</td>
+                    <AuthorizeView Roles="Administrator">
+                        <Authorized>
+                            <td class="d-flex">
+                                <a class="w-50 btn btn-success mx-2 my-auto"
+                                   @onclick="() => ReintroduceProduct(product.ProductID)">
+                                    <span class="bi bi-arrow-90deg-up mx-1" aria-hidden="true"> </span>
+                                </a>
+                            </td>
+                        </Authorized>
+                        <NotAuthorized>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<!-- Modal -->
+<div>
+    <Pagination ActivePageNumber="@currentPage" TotalPages="@totalPage" PageChanged="@OnPageChangedAsync" />
+</div>
