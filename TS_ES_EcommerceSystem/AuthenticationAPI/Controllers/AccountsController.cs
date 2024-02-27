@@ -38,10 +38,9 @@ namespace AuthenticationAPI.Controllers
             /// <param name="register">The user account information.</param>
             /// <returns>A <see cref="IActionResult"/> indicating whether the operation succeeded.</returns>
             var result = await repo.Register(register);
-            if (!result.Succeeded)
+            if (!result.Successful)
             {
-                var errors = result.Errors.Select(x => x.Description);
-                return Ok(new RegisterResponse { Successful = false, Errors = errors });
+                return Ok(new RegisterResponse { Successful = false, Errors = result.Errors });
             }
             return Ok(new RegisterResponse { Successful = true });
         }
